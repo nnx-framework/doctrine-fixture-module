@@ -1,11 +1,12 @@
 {
-  "name": "nnx/entry-name-resolver",
-  "description": "Entry name resolver",
+  "name": "nnx/doctrine-fixture-module",
+  "description": "Doctrine Fixture Module",
   "type": "library",
   "keywords": [
     "zf2",
     "module",
-    "entry name resolver"
+    "doctrine",
+    "fixture"
   ],
   "license": "GPL-3.0",
   "authors": [
@@ -38,7 +39,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Nnx\\EntryNameResolver\\": "src/"
+      "Nnx\\DoctrineFixtureModule\\": "src/"
     },
     "classmap": [
       "./Module.php",
@@ -47,8 +48,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Nnx\\EntryNameResolver\\PhpUnit\\Test\\": "test/phpunit/tests",
-      "Nnx\\EntryNameResolver\\PhpUnit\\TestData\\": "test/phpunit/_files"
+      "Nnx\\DoctrineFixtureModule\\PhpUnit\\Test\\": "test/phpunit/tests",
+      "Nnx\\DoctrineFixtureModule\\PhpUnit\\TestData\\": "test/phpunit/_files"
     },
     "classmap": [
       "./test/phpunit/Bootstrap.php",
