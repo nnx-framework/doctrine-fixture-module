@@ -1,14 +1,14 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver\PhpUnit\TestData;
+namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData;
 
 /**
  * Class TestPaths
  *
- * @package Nnx\EntryNameResolver\PhpUnit\TestData
+ * @package Nnx\DoctrineFixtureModule\PhpUnit\TestData
  */
 class TestPaths
 {

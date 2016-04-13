@@ -1,7 +1,7 @@
 docs_dir: doc/book/ru
 pages:
     - index.md
-site_name: container
-site_description: 'Определение имени сервиса(компонента и.т.д) в зависимости от контекста вызова'
-repo_url: 'https://github.com/nnx-framework/entry-name-resolver'
+site_name: DoctrineFixtureModule
+site_description: 'Работа с фикстурами Doctrine2'
+repo_url: 'https://github.com/nnx-framework/doctrine-fixture-module'
 copyright: 'Copyright (c) 2016 <a href="https://github.com/nnx-framework">NNX</a>'

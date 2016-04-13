@@ -1,9 +1,9 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver\PhpUnit\TestData\DefaultApp;
+namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData\DefaultApp;
 
 return [
 

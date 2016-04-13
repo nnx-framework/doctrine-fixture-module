@@ -1,14 +1,14 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver;
+namespace Nnx\DoctrineFixtureModule;
 
 return [
     'service_manager' => [
         'invokables'         => [
-            EntryNameResolverManager::class => EntryNameResolverManager::class
+            
         ],
         'factories'          => [
 

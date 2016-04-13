@@ -1,18 +1,18 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver\PhpUnit\Test;
+namespace Nnx\DoctrineFixtureModule\PhpUnit\Test;
 
-use Nnx\EntryNameResolver\PhpUnit\TestData\TestPaths;
+use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Nnx\EntryNameResolver\Module;
+use Nnx\DoctrineFixtureModule\Module;
 
 /**
  * Class ModuleTest
  *
- * @package Nnx\EntryNameResolver\PhpUnit\Test
+ * @package Nnx\DoctrineFixtureModule\PhpUnit\Test
  */
 class ModuleTest extends AbstractHttpControllerTestCase
 {

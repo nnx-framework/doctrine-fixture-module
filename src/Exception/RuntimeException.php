@@ -1,14 +1,14 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver\Exception;
+namespace Nnx\DoctrineFixtureModule\Exception;
 
 /**
  * Class RuntimeException
  *
- * @package Nnx\EntryNameResolver\Exception
+ * @package Nnx\DoctrineFixtureModule\Exception
  */
 class RuntimeException extends \RuntimeException implements
     ExceptionInterface

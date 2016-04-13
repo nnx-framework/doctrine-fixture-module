@@ -1,9 +1,9 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver\PhpUnit\Test;
+namespace Nnx\DoctrineFixtureModule\PhpUnit\Test;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Loader\StandardAutoloader;
@@ -15,7 +15,7 @@ chdir(__DIR__);
 /**
  * Class Bootstrap
  *
- * @package Nnx\EntryNameResolver\PhpUnit\Test
+ * @package Nnx\DoctrineFixtureModule\PhpUnit\Test
  */
 class Bootstrap
 {
@@ -56,9 +56,9 @@ class Bootstrap
                 StandardAutoloader::class => [
                     'autoregister_zf' => true,
                     'namespaces' => [
-                        'Nnx\\EntryNameResolver' => __DIR__ . '/../../src/',
+                        'Nnx\\DoctrineFixtureModule' => __DIR__ . '/../../src/',
                         __NAMESPACE__ => __DIR__ . '/tests/',
-                        'Nnx\\EntryNameResolver\\PhpUnit\\TestData' => __DIR__ . '/_files'
+                        'Nnx\\DoctrineFixtureModule\\PhpUnit\\TestData' => __DIR__ . '/_files'
                     ]
                 ]
             ]);

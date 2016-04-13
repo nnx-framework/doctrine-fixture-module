@@ -1,9 +1,9 @@
 <?php
 /**
- * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\EntryNameResolver;
+namespace Nnx\DoctrineFixtureModule;
 
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Listener\ServiceListenerInterface;
@@ -21,7 +21,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Class Module
  *
- * @package Nnx\EntryNameResolverOptions
+ * @package Nnx\DoctrineFixtureModule
  */
 class Module implements
     BootstrapListenerInterface,
@@ -34,7 +34,7 @@ class Module implements
      *
      * @var string
      */
-    const CONFIG_KEY = 'nnx_entry_name_resolver';
+    const CONFIG_KEY = 'nnx_doctrine_fixture_module';
 
     /**
      * Имя модуля
@@ -71,12 +71,6 @@ class Module implements
         }
 
 
-        $serviceListener->addServiceManager(
-            EntryNameResolverManager::class,
-            EntryNameResolverManager::CONFIG_KEY,
-            EntryNameResolverProviderInterface::class,
-            'getEntryNameResolverConfig'
-        );
 
     }
 

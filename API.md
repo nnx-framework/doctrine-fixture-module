@@ -1,6 +1,6 @@
-# Entry name resolver
+# Doctrine Fixture Module
 
-Определение имени сервиса(компонента и.т.д) в зависимости от контекста вызова
+Работа с фикстурами Doctrine2
 
 Данный модуль реализует:
 
@@ -11,4 +11,4 @@
 # Plugin Managers
 
 
-# Настройка модуля nnx_container
+# Настройка модуля nnx_doctrine_fixture_module
