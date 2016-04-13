@@ -1,0 +1,11 @@
+<?php
+/**
+ * @link    https://github.com/nnx-framework/entry-name-resolver
+ * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
+ */
+
+return [
+    'nnx_entry_name_resolver' => [
+
+    ]
+];
