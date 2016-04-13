@@ -16,5 +16,4 @@ use Nnx\ModuleOptions\ModuleOptionsInterface;
  */
 class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
 {
-
 }
