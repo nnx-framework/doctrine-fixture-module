@@ -34,36 +34,12 @@ class TestPaths
     }
 
     /**
-     * Путь до директории в которой находятся тестовые модули сервиса входящего в приложение, используемого для тестирования
-     * определения имени сервиса по контексту
-     *
-     * @return string
-     */
-    public static function getPathToContextResolverTestServiceDir()
-    {
-        return  __DIR__ . '/../_files/ContextResolver/vendor/service/';
-    }
-
-
-    /**
-     * Путь до директории в которой находятся тестовые модули сервиса входящего в приложение, используемого для тестирования
-     * определения имени сервиса по контексту
-     *
-     * @return string
-     */
-    public static function getPathToContextResolverTestCustomServiceDir()
-    {
-        return  __DIR__ . '/../_files/ContextResolver/vendor/custom-service/';
-    }
-
-
-    /**
      * Путь до файла приложения, используемого для тестирования получения сервиса по контексту
      *
      * @return string
      */
-    public static function getPathToContextResolverAppConfig()
+    public static function getPathToFixtureTestAppConfig()
     {
-        return  __DIR__ . '/../_files/ContextResolver/config/application.config.php';
+        return  __DIR__ . '/../_files/FixtureTestApp/config/application.config.php';
     }
 }
