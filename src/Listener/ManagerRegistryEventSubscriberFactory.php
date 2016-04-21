@@ -6,10 +6,10 @@
 namespace Nnx\DoctrineFixtureModule\Listener;
 
 use Doctrine\Fixture\Persistence\ManagerRegistryEventSubscriber;
-use Zend\EventManager\EventManagerAwareTrait;
+use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
 
 
 /**
@@ -20,37 +20,26 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 class ManagerRegistryEventSubscriberFactory
     implements FactoryInterface
 {
-    use EventManagerAwareTrait;
 
-    /**
-     * Идендификатор EventManager'a
-     *
-     * @var array
-     */
-    protected $eventIdentifier = [
-        'DoctrineManagerRegistry'
-    ];
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return ManagerRegistryEventSubscriber
-     * @throws \Nnx\DoctrineFixtureModule\Listener\Exception\RuntimeException
+     * @return ManagerRegistryEventSubscriber|mixed
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Utils\Exception\RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-
-        //@see \Nnx\Doctrine\Listener\ManagerRegistryListener
-        $results = $this->getEventManager()->trigger('get.doctrineManagerRegistry', $this, [], function ($managerRegistry) {
-            return $managerRegistry instanceof ManagerRegistry;
-        });
-
-        $managerRegistry = $results->last();
-
-        if (!$managerRegistry instanceof ManagerRegistry) {
-            $errMsg = 'ManagerRegistry not found';
-            throw new Exception\RuntimeException($errMsg);
+        $appServiceLocator = $serviceLocator;
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $appServiceLocator = $serviceLocator->getServiceLocator();
         }
+
+        /** @var ManagerRegistryProviderInterface $managerRegistryProvider */
+        $managerRegistryProvider = $appServiceLocator->get(ManagerRegistryProviderInterface::class);
+        $managerRegistry = $managerRegistryProvider->getManagerRegistry();
+
 
         return new ManagerRegistryEventSubscriber($managerRegistry);
     }

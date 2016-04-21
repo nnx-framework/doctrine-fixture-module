@@ -33,5 +33,7 @@ return array_merge_recursive(
     include __DIR__ . '/fixtureFilter.config.php',
     include __DIR__ . '/fixtureExecutor.config.php',
     include __DIR__ . '/doctrine.config.php',
+    include __DIR__ . '/controllers.config.php',
+    include __DIR__ . '/console.config.php',
     $config
 );

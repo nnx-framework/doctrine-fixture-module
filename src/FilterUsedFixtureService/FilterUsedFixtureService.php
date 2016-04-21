@@ -9,9 +9,9 @@ use Nnx\DoctrineFixtureModule\Executor\ExecutorInterface;
 use Doctrine\Fixture\Filter\Filter;
 use Doctrine\Fixture\Filter\ChainFilter;
 use Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture;
+use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use SplObjectStorage;
 use Doctrine\Fixture\Fixture;
-use Doctrine\Common\Persistence\ManagerRegistry as ManagerRegistryInterface;
 use Nnx\DoctrineFixtureModule\Entity\UsedFixture;
 
 /**
@@ -30,11 +30,11 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
     protected $filterUsedFixtureByExecutor;
 
     /**
-     * Компонент для управления ObjectManager'ами
+     * Компонент для управления получения ManagerRegistry
      *
-     * @var ManagerRegistryInterface
+     * @var ManagerRegistryProviderInterface
      */
-    protected $managerRegistry;
+    protected $managerRegistryProvider;
 
     /**
      * Прототип для сущности содержащей информацию о отработанных фикстурах
@@ -44,13 +44,18 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
     protected $usedFixtureEntityPrototype;
 
     /**
+     * В зависимости передается не ManagerRegistry, а провайдер позволяющий получить его по требованию. Это сделанно
+     * специально, что бы предотвратить получение ManagerRegistry при старте модуля
+     *
+     *
      * FilterUsedFixtureService constructor.
      *
-     * @param ManagerRegistryInterface $managerRegistry
+     * @param ManagerRegistryProviderInterface $managerRegistryProvider
+     *
      */
-    public function __construct(ManagerRegistryInterface $managerRegistry)
+    public function __construct(ManagerRegistryProviderInterface $managerRegistryProvider)
     {
-        $this->setManagerRegistry($managerRegistry);
+        $this->setManagerRegistryProvider($managerRegistryProvider);
         $this->filterUsedFixtureByExecutor = new SplObjectStorage();
     }
 
@@ -110,7 +115,7 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
      */
     public function markFixture(ExecutorInterface $executor, Fixture $fixture)
     {
-        $objectManager = $this->getManagerRegistry()->getManager();
+        $objectManager = $this->getManagerRegistryProvider()->getManagerRegistry()->getManager();
 
 
         $executorName = $executor->getName();
@@ -145,7 +150,7 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
      */
     public function isUsedFixture(Fixture $fixture, ExecutorInterface $executor)
     {
-        $objectManager = $this->getManagerRegistry()->getManager();
+        $objectManager = $this->getManagerRegistryProvider()->getManagerRegistry()->getManager();
 
         $executorName = $executor->getName();
         $fixtureClassName =  get_class($fixture);
@@ -160,25 +165,25 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
 
 
     /**
-     * Возвращает компонент для управления ObjectManager'ами
+     * Возвращает компонент позволяющий получить ManagerRegistry
      *
-     * @return ManagerRegistryInterface
+     * @return ManagerRegistryProviderInterface
      */
-    public function getManagerRegistry()
+    public function getManagerRegistryProvider()
     {
-        return $this->managerRegistry;
+        return $this->managerRegistryProvider;
     }
 
     /**
-     * Устанавливает компонент для управления ObjectManager'ами
+     * Устанавливает компонент позволяющий получить ManagerRegistry
      *
-     * @param ManagerRegistryInterface $managerRegistry
+     * @param ManagerRegistryProviderInterface $managerRegistryProvider
      *
      * @return $this
      */
-    public function setManagerRegistry(ManagerRegistryInterface $managerRegistry)
+    public function setManagerRegistryProvider(ManagerRegistryProviderInterface $managerRegistryProvider)
     {
-        $this->managerRegistry = $managerRegistry;
+        $this->managerRegistryProvider = $managerRegistryProvider;
 
         return $this;
     }

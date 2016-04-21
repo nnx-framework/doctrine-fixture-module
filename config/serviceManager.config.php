@@ -23,13 +23,15 @@ use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceInterface;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceFactory;
-
+use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProvider;
+use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 return [
     'service_manager' => [
         'invokables'         => [
             FixtureLoaderManagerInterface::class   => FixtureLoaderManager::class,
             FixtureFilterManagerInterface::class   => FixtureFilterManager::class,
             FixtureExecutorManagerInterface::class => FixtureExecutorManager::class,
+            ManagerRegistryProviderInterface::class         => ManagerRegistryProvider::class
         ],
         'factories'          => [
             DefaultExecutorConfiguration::class      => DefaultExecutorConfigurationFactory::class,

@@ -8,8 +8,7 @@ namespace Nnx\DoctrineFixtureModule\PhpUnit\Test\Listener;
 use Doctrine\Fixture\Persistence\ConnectionRegistryEventSubscriber;
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Nnx\DoctrineFixtureModule\Exception\ExceptionInterface;
+
 
 /**
  * Class ConnectionRegistryEventSubscriberFactoryTest
@@ -46,34 +45,5 @@ class ConnectionRegistryEventSubscriberFactoryTest extends AbstractHttpControlle
     {
         $connectionRegistryEventSubscriber = $this->getApplication()->getServiceManager()->get(ConnectionRegistryEventSubscriber::class);
         static::assertInstanceOf(ConnectionRegistryEventSubscriber::class, $connectionRegistryEventSubscriber);
-    }
-
-    /**
-     * Проверка создания ConnectionRegistryEventSubscriber, при условии что не удалось получить экземпляр ManagerRegistry
-     *
-     * @expectedException \Nnx\DoctrineFixtureModule\Listener\Exception\RuntimeException
-     * @expectedExceptionMessage ManagerRegistry not found
-     *
-     * @throws ExceptionInterface
-     * @throws \Exception
-     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
-     */
-    public function testNotFoundManagerRegistry()
-    {
-        $sharedEventManager = $this->getApplication()->getEventManager()->getSharedManager();
-        $sharedEventManager->clearListeners('DoctrineManagerRegistry');
-
-        try {
-            $this->getApplication()->getServiceManager()->get(ConnectionRegistryEventSubscriber::class);
-        } catch (ServiceNotCreatedException $e) {
-            $currentException = $e->getPrevious();
-            while (null !== $currentException && !$currentException instanceof ExceptionInterface) {
-                $currentException = $currentException->getPrevious();
-            }
-
-            if ($currentException instanceof ExceptionInterface) {
-                throw $currentException;
-            }
-        }
     }
 }

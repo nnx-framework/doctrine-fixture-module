@@ -5,10 +5,11 @@
  */
 namespace Nnx\DoctrineFixtureModule\FilterUsedFixtureService;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Zend\EventManager\EventManagerAwareTrait;
+use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+
 
 /**
  * Class FilterUsedFixtureServiceFactory
@@ -17,37 +18,25 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class FilterUsedFixtureServiceFactory implements FactoryInterface
 {
-    use EventManagerAwareTrait;
 
-    /**
-     * Идендификатор EventManager'a
-     *
-     * @var array
-     */
-    protected $eventIdentifier = [
-        'DoctrineManagerRegistry'
-    ];
 
     /**
      * @inheritDoc
      *
-     * @return FilterUsedFixtureService
-     * @throws \Nnx\DoctrineFixtureModule\FilterUsedFixtureService\Exception\RuntimeException
+     *
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Utils\Exception\RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        //@see \Nnx\Doctrine\Listener\ManagerRegistryListener
-        $results = $this->getEventManager()->trigger('get.doctrineManagerRegistry', $this, [], function ($managerRegistry) {
-            return $managerRegistry instanceof ManagerRegistry;
-        });
-
-        $managerRegistry = $results->last();
-
-        if (!$managerRegistry instanceof ManagerRegistry) {
-            $errMsg = 'ManagerRegistry not found';
-            throw new Exception\RuntimeException($errMsg);
+        $appServiceLocator = $serviceLocator;
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $appServiceLocator = $serviceLocator->getServiceLocator();
         }
 
-        return new FilterUsedFixtureService($managerRegistry);
+        /** @var ManagerRegistryProviderInterface $managerRegistryProvider */
+        $managerRegistryProvider = $appServiceLocator->get(ManagerRegistryProviderInterface::class);
+
+        return new FilterUsedFixtureService($managerRegistryProvider);
     }
 }

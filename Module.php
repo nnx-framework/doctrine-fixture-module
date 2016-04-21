@@ -7,6 +7,7 @@ namespace Nnx\DoctrineFixtureModule;
 
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener;
 use Nnx\ModuleOptions\ModuleConfigKeyProviderInterface;
+use Zend\Console\Adapter\AdapterInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Listener\ServiceListenerInterface;
 use Zend\ModuleManager\ModuleManager;
@@ -29,6 +30,8 @@ use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManager;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorProviderInterface;
 use Nnx\ModuleOptions\Module as ModuleOptions;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
 
 /**
  * Class Module
@@ -41,7 +44,9 @@ class Module implements
     InitProviderInterface,
     ConfigProviderInterface,
     ModuleConfigKeyProviderInterface,
-    DependencyIndicatorInterface
+    DependencyIndicatorInterface,
+    ConsoleUsageProviderInterface,
+    ConsoleBannerProviderInterface
 {
     /**
      * Имя секции в конфиги приложения отвечающей за настройки модуля
@@ -182,5 +187,28 @@ class Module implements
     {
         return include __DIR__ . '/config/module.config.php';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConsoleUsage(AdapterInterface $console)
+    {
+        return [
+            'Doctrine data fixture',
+            'nnx:fixture execute-fixture --fixtureClassName=' => 'Run fixture bu class name',
+            ['--fixtureClassName=FIXTURE_CLASS_NAME', 'Fixture class name'],
+            'nnx:fixture run-executor --executorName=' => 'Run fixture executor by name',
+            ['--executorName==EXECUTOR_NAME', 'Executor name'],
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConsoleBanner(AdapterInterface $console)
+    {
+        return 'Doctrine fixture tools';
+    }
+
 
 } 
