@@ -42,4 +42,15 @@ class TestPaths
     {
         return  __DIR__ . '/../_files/FixtureTestApp/config/application.config.php';
     }
+
+
+    /**
+     * Возвращает путь путь до директории в которой создаются прокси классы для сущностей доктрины
+     *
+     * @return string
+     */
+    public static function getPathToDoctrineProxyDir()
+    {
+        return __DIR__ . '/../../../data/test/Proxies/';
+    }
 }

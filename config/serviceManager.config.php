@@ -21,6 +21,8 @@ use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderInterface;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderFactory;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListenerFactory;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener;
+use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceInterface;
+use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceFactory;
 
 return [
     'service_manager' => [
@@ -34,7 +36,8 @@ return [
             ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriberFactory::class,
             ConnectionRegistryEventSubscriber::class => ConnectionRegistryEventSubscriberFactory::class,
             FixtureExecutorBuilderInterface::class   => FixtureExecutorBuilderFactory::class,
-            FilterUsedFixtureListener::class         => FilterUsedFixtureListenerFactory::class
+            FilterUsedFixtureListener::class         => FilterUsedFixtureListenerFactory::class,
+            FilterUsedFixtureServiceInterface::class => FilterUsedFixtureServiceFactory::class
         ],
         'abstract_factories' => [
 

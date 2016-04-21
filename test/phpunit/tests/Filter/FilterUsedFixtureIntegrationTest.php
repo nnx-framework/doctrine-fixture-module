@@ -5,6 +5,7 @@
  */
 namespace Nnx\DoctrineFixtureModule\PhpUnit\Test\Filter;
 
+use Doctrine\ORM\Tools\SchemaTool;
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
@@ -21,6 +22,8 @@ class FilterUsedFixtureIntegrationTest extends AbstractHttpControllerTestCase
      * Установка окружения
      *
      * @throws \Zend\Stdlib\Exception\LogicException
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Doctrine\ORM\Tools\ToolsException
      */
     public function setUp()
     {
@@ -28,6 +31,15 @@ class FilterUsedFixtureIntegrationTest extends AbstractHttpControllerTestCase
         $this->setApplicationConfig(
             include TestPaths::getPathToFixtureTestAppConfig()
         );
+
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $this->getApplication()->getServiceManager()->get('doctrine.entitymanager.test');
+
+        $tool = new SchemaTool($em);
+        $tool->dropDatabase();
+
+        $metadata = $em->getMetadataFactory()->getAllMetadata();
+        $tool->createSchema($metadata);
 
         parent::setUp();
     }
@@ -43,6 +55,7 @@ class FilterUsedFixtureIntegrationTest extends AbstractHttpControllerTestCase
         $fixtureExecutorManager = $this->getApplicationServiceLocator()->get(FixtureExecutorManagerInterface::class);
         $executor = $fixtureExecutorManager->get('testFilterUsedFixture');
 
+        $executor->import();
         $executor->import();
     }
 }

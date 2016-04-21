@@ -17,9 +17,13 @@ class FilterUsedFixtureListenerFactory implements FactoryInterface
 {
     /**
      * @inheritDoc
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new FilterUsedFixtureListener();
+        /** @var FilterUsedFixtureServiceInterface $filterUsedFixtureService */
+        $filterUsedFixtureService = $serviceLocator->get(FilterUsedFixtureServiceInterface::class);
+
+        return new FilterUsedFixtureListener($filterUsedFixtureService);
     }
 }

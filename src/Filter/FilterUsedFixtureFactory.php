@@ -5,6 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule\Filter;
 
+use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\MutableCreationOptionsInterface;
 use Zend\ServiceManager\MutableCreationOptionsTrait;
@@ -24,6 +26,7 @@ class FilterUsedFixtureFactory
     /**
      * @inheritDoc
      * @throws \Nnx\DoctrineFixtureModule\Filter\Exception\RuntimeException
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -33,6 +36,15 @@ class FilterUsedFixtureFactory
             throw new Exception\RuntimeException($errMsg);
         }
 
-        return new FilterUsedFixture($creationOptions['contextExecutor']);
+        $appServiceLocator = $serviceLocator;
+        if ($serviceLocator instanceof AbstractPluginManager) {
+            $appServiceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        /** @var FilterUsedFixtureServiceInterface $filterUsedFixtureService */
+        $filterUsedFixtureService = $appServiceLocator->get(FilterUsedFixtureServiceInterface::class);
+
+
+        return new FilterUsedFixture($creationOptions['contextExecutor'], $filterUsedFixtureService);
     }
 }

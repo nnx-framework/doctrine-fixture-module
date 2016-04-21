@@ -5,6 +5,9 @@
  */
 namespace Nnx\DoctrineFixtureModule\Executor;
 
+use Doctrine\Fixture\Loader\Loader;
+use Doctrine\Fixture\Filter\Filter;
+
 /**
  * Interface ExecutorInterface
  *
@@ -33,4 +36,19 @@ interface ExecutorInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * Возвращает загрузчик фикстур
+     *
+     * @return Loader
+     */
+    public function getLoader();
+
+
+    /**
+     * Возвращает фильтр фикстур
+     *
+     * @return Filter
+     */
+    public function getFilter();
 }

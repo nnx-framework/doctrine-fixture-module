@@ -31,7 +31,7 @@ class LoaderFactoriesTest extends AbstractHttpControllerTestCase
     {
         /** @noinspection PhpIncludeInspection */
         $this->setApplicationConfig(
-            include TestPaths::getPathToDefaultAppConfig()
+            include TestPaths::getPathToFixtureTestAppConfig()
         );
 
         parent::setUp();

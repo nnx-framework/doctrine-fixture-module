@@ -8,6 +8,7 @@ namespace Nnx\DoctrineFixtureModule\Filter;
 use Doctrine\Fixture\Fixture;
 use Doctrine\Fixture\Filter\Filter;
 use Nnx\DoctrineFixtureModule\Executor\ExecutorInterface;
+use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceInterface;
 
 /**
  * Class FilterUsedFixture
@@ -23,12 +24,21 @@ class FilterUsedFixture
     protected $contextExecutor;
 
     /**
+     * Сервис позволяющий получить информацию о уже выполенных фикстурах
+     *
+     * @var FilterUsedFixtureServiceInterface
+     */
+    protected $filterUsedFixtureService;
+
+    /**
      * FilterUsedFixture constructor.
      *
-     * @param ExecutorInterface $contextExecutor
+     * @param ExecutorInterface                 $contextExecutor
+     * @param FilterUsedFixtureServiceInterface $filterUsedFixtureService
      */
-    public function __construct(ExecutorInterface $contextExecutor)
+    public function __construct(ExecutorInterface $contextExecutor, FilterUsedFixtureServiceInterface $filterUsedFixtureService)
     {
+        $this->setFilterUsedFixtureService($filterUsedFixtureService);
         $this->setContextExecutor($contextExecutor);
     }
 
@@ -38,7 +48,7 @@ class FilterUsedFixture
      */
     public function accept(Fixture $fixture)
     {
-        return true;
+        return !$this->getFilterUsedFixtureService()->isUsedFixture($fixture, $this->getContextExecutor());
     }
 
     /**
@@ -61,6 +71,30 @@ class FilterUsedFixture
     public function setContextExecutor(ExecutorInterface $contextExecutor)
     {
         $this->contextExecutor = $contextExecutor;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает сервис позволяющий получить информацию о уже выполенных фикстурах
+     *
+     * @return FilterUsedFixtureServiceInterface
+     */
+    public function getFilterUsedFixtureService()
+    {
+        return $this->filterUsedFixtureService;
+    }
+
+    /**
+     *  Устанавливает сервис позволяющий получить информацию о уже выполенных фикстурах
+     *
+     * @param FilterUsedFixtureServiceInterface $filterUsedFixtureService
+     *
+     * @return $this
+     */
+    public function setFilterUsedFixtureService($filterUsedFixtureService)
+    {
+        $this->filterUsedFixtureService = $filterUsedFixtureService;
 
         return $this;
     }
