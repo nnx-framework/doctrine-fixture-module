@@ -90,6 +90,26 @@ return [
                         ]
                     ]
                 ]
+            ],
+            'testDuplicateFixtures' => [
+                [
+                    'name' => ClassLoader::class,
+                    'options' => [
+                        'classList' => [
+                            TestModule1\FooFixture::class,
+                            TestModule1\BarFixture::class,
+                        ]
+                    ]
+                ],
+                [
+                    'name' => ClassLoader::class,
+                    'options' => [
+                        'classList' => [
+                            TestModule1\FooFixture::class,
+                            TestModule1\BarFixture::class,
+                        ]
+                    ]
+                ],
             ]
         ],
         'filters' => [
@@ -114,6 +134,10 @@ return [
             ],
             'testFilterUsedFixture' => [
                 'fixturesLoader' => 'testChainFixtureLoader',
+                'filter' => 'testFilterUsedFixture'
+            ],
+            'testDuplicateFixtures' => [
+                'fixturesLoader' => 'testDuplicateFixtures',
                 'filter' => 'testFilterUsedFixture'
             ]
         ]

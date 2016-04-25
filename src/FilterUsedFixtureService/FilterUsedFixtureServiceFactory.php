@@ -29,10 +29,7 @@ class FilterUsedFixtureServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $appServiceLocator = $serviceLocator;
-        if ($serviceLocator instanceof AbstractPluginManager) {
-            $appServiceLocator = $serviceLocator->getServiceLocator();
-        }
+        $appServiceLocator = $serviceLocator instanceof AbstractPluginManager ? $serviceLocator->getServiceLocator() : $serviceLocator;
 
         /** @var ManagerRegistryProviderInterface $managerRegistryProvider */
         $managerRegistryProvider = $appServiceLocator->get(ManagerRegistryProviderInterface::class);

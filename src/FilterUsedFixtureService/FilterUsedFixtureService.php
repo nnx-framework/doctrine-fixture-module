@@ -75,6 +75,10 @@ class FilterUsedFixtureService implements FilterUsedFixtureServiceInterface
 
         $filter = $executor->getFilter();
 
+        if (!$filter instanceof Filter) {
+            return false;
+        }
+
         $hasFilterUsedFixture = $this->detectFilterUsedFixture($filter);
         $this->filterUsedFixtureByExecutor->offsetSet($executor, $hasFilterUsedFixture);
 

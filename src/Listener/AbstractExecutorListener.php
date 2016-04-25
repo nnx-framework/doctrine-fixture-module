@@ -81,6 +81,11 @@ abstract class AbstractExecutorListener extends AbstractListenerAggregate implem
             throw new Exception\RuntimeException($errMsg);
         }
 
+        if (null !== $this->currentFixture) {
+            $errMsg = 'There should not be running fixtures';
+            throw new Exception\RuntimeException($errMsg);
+        }
+
         if (null !== $this->currentExecutor) {
             $errMsg = sprintf(
                 'You can not start the executor %s. Already running %s',
@@ -89,10 +94,7 @@ abstract class AbstractExecutorListener extends AbstractListenerAggregate implem
             );
             throw new Exception\RuntimeException($errMsg);
         }
-        if (null !== $this->currentFixture) {
-            $errMsg = 'There should not be running fixtures';
-            throw new Exception\RuntimeException($errMsg);
-        }
+
 
         $event = $this->buildEvent(
             ExecutorDispatcherEvent::RUN_EXECUTOR_EVENT,
@@ -169,6 +171,11 @@ abstract class AbstractExecutorListener extends AbstractListenerAggregate implem
      */
     public function executeFixtureHandler(FixtureEvent $e)
     {
+        if (null === $this->currentExecutor) {
+            $errMsg = 'It failed to get the Executor, to the current context';
+            throw new Exception\RuntimeException($errMsg);
+        }
+
         $executor = $e->getExecutor();
         if (!$executor instanceof ExecutorInterface) {
             $errMsg = 'Executor not specified';

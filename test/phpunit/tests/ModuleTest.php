@@ -6,11 +6,12 @@
 namespace Nnx\DoctrineFixtureModule\PhpUnit\Test;
 
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
 use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use Zend\Test\PHPUnit\Controller\AbstractConsoleControllerTestCase;
 use Nnx\DoctrineFixtureModule\Module;
 
 /**
@@ -18,7 +19,7 @@ use Nnx\DoctrineFixtureModule\Module;
  *
  * @package Nnx\DoctrineFixtureModule\PhpUnit\Test
  */
-class ModuleTest extends AbstractHttpControllerTestCase
+class ModuleTest extends AbstractConsoleControllerTestCase
 {
 
     /**
@@ -122,5 +123,51 @@ class ModuleTest extends AbstractHttpControllerTestCase
 
 
         $module->init($moduleManagerMock);
+    }
+
+
+    /**
+     * Проверка поведения, если в метод отвечающий за настройки модуля, передно событие не корректного типа
+     *
+     * @expectedException \Nnx\DoctrineFixtureModule\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Event not implement Zend\Mvc\MvcEvent
+     *
+     * @throws \PHPUnit_Framework_Exception
+     * @throws \Nnx\DoctrineFixtureModule\Exception\InvalidArgumentException
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     */
+    public function testNoMvcEventInObBootstrap()
+    {
+        /** @var EventInterface $eventMock */
+        $eventMock = $this->getMock(EventInterface::class);
+        $module = new Module();
+        $module->onBootstrap($eventMock);
+    }
+
+
+    /**
+     * Проверка поведения, если в метод отвечающий за настройки модуля, передно событие не корректного типа
+     *
+     *
+     * @throws \Exception
+     */
+    public function testConsoleUsage()
+    {
+        $this->dispatch('');
+        $this->assertConsoleOutputContains('Doctrine data fixture');
+        $this->assertConsoleOutputContains('nnx:fixture execute-fixture');
+        $this->assertConsoleOutputContains('nnx:fixture run-executor');
+    }
+
+    /**
+     * Проверка поведения, если в метод отвечающий за настройки модуля, передно событие не корректного типа
+     *
+     *
+     * @throws \Exception
+     */
+    public function testGetConsoleBanner()
+    {
+        $this->dispatch('');
+        $this->assertConsoleOutputContains('Doctrine fixture tools');
     }
 }

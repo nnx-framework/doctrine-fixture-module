@@ -9,7 +9,15 @@ namespace Nnx\DoctrineFixtureModule\Entity;
  * Class UsedFixture
  *
  * @Doctrine\ORM\Mapping\Entity()
- * @Doctrine\ORM\Mapping\Table(name="doctrine_fixture_module_used_fixture")
+ * @Doctrine\ORM\Mapping\Table(
+ *     name="doctrine_fixture_module_used_fixture",
+ *     uniqueConstraints={
+ *         @Doctrine\ORM\Mapping\UniqueConstraint(
+ *              name="used_fixture_unique",
+ *              columns={"executor_name","fixture_class_name"}
+ *          )
+ *     }
+ * )
  *
  * @package Nnx\DoctrineFixtureModule\Entity
  */
@@ -64,7 +72,7 @@ class UsedFixture
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (integer)$id;
 
         return $this;
     }
