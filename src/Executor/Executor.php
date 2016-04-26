@@ -63,6 +63,11 @@ class Executor implements ExecutorInterface
     protected $fixtureExecutorBuilder;
 
     /**
+     * @var array
+     */
+    protected $contextFixtureInitializer = [];
+
+    /**
      * Executor constructor.
      *
      * @param Configuration                   $configuration
@@ -175,7 +180,7 @@ class Executor implements ExecutorInterface
      *
      * @return void
      */
-    public function import()
+    public function import(array $contextData = [])
     {
         $loader = $this->getLoader();
         $filter = $this->getFilter();
@@ -189,7 +194,7 @@ class Executor implements ExecutorInterface
      *
      * @return void
      */
-    public function purge()
+    public function purge(array $contextData = [])
     {
         $loader = $this->getLoader();
         $filter = $this->getFilter();

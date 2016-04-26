@@ -5,8 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule;
 
-use Doctrine\Fixture\Persistence\ConnectionRegistryEventSubscriber;
-use Doctrine\Fixture\Persistence\ManagerRegistryEventSubscriber;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\ConnectionRegistryEventSubscriber;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\ManagerRegistryEventSubscriber;
 
 
 $config = [
@@ -35,5 +35,6 @@ return array_merge_recursive(
     include __DIR__ . '/doctrine.config.php',
     include __DIR__ . '/controllers.config.php',
     include __DIR__ . '/console.config.php',
+    include __DIR__ . '/fixtureInitializer.config.php',
     $config
 );

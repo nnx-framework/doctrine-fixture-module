@@ -13,10 +13,6 @@ use Nnx\DoctrineFixtureModule\Filter\FixtureFilterManager;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManager;
 use Nnx\DoctrineFixtureModule\Executor\DefaultExecutorConfiguration;
-use Doctrine\Fixture\Persistence\ManagerRegistryEventSubscriber;
-use Nnx\DoctrineFixtureModule\Listener\ManagerRegistryEventSubscriberFactory;
-use Doctrine\Fixture\Persistence\ConnectionRegistryEventSubscriber;
-use Nnx\DoctrineFixtureModule\Listener\ConnectionRegistryEventSubscriberFactory;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderInterface;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderFactory;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListenerFactory;
@@ -25,18 +21,20 @@ use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceI
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceFactory;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProvider;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
+
 return [
     'service_manager' => [
         'invokables'         => [
-            FixtureLoaderManagerInterface::class   => FixtureLoaderManager::class,
-            FixtureFilterManagerInterface::class   => FixtureFilterManager::class,
-            FixtureExecutorManagerInterface::class => FixtureExecutorManager::class,
-            ManagerRegistryProviderInterface::class         => ManagerRegistryProvider::class
+            FixtureLoaderManagerInterface::class      => FixtureLoaderManager::class,
+            FixtureFilterManagerInterface::class      => FixtureFilterManager::class,
+            FixtureExecutorManagerInterface::class    => FixtureExecutorManager::class,
+            ManagerRegistryProviderInterface::class   => ManagerRegistryProvider::class,
+            FixtureInitializerManagerInterface::class => FixtureInitializerManager::class
         ],
         'factories'          => [
             DefaultExecutorConfiguration::class      => DefaultExecutorConfigurationFactory::class,
-            ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriberFactory::class,
-            ConnectionRegistryEventSubscriber::class => ConnectionRegistryEventSubscriberFactory::class,
             FixtureExecutorBuilderInterface::class   => FixtureExecutorBuilderFactory::class,
             FilterUsedFixtureListener::class         => FilterUsedFixtureListenerFactory::class,
             FilterUsedFixtureServiceInterface::class => FilterUsedFixtureServiceFactory::class

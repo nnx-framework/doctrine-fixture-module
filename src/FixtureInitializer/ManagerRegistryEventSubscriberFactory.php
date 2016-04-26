@@ -3,9 +3,8 @@
  * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\DoctrineFixtureModule\Listener;
+namespace Nnx\DoctrineFixtureModule\FixtureInitializer;
 
-use Doctrine\Fixture\Persistence\ConnectionRegistryEventSubscriber;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
@@ -13,18 +12,19 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 
 /**
- * Class ConnectionRegistryEventSubscriberFactory
+ * Class ManagerRegistryEventSubscriberFactory
  *
- * @package Nnx\DoctrineFixtureModule\Listener
+ * @package Nnx\DoctrineFixtureModule\FixtureInitializer
  */
-class ConnectionRegistryEventSubscriberFactory
+class ManagerRegistryEventSubscriberFactory
     implements FactoryInterface
 {
+
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return ConnectionRegistryEventSubscriber|mixed
+     * @return ManagerRegistryEventSubscriber|mixed
      * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
      * @throws \Nnx\DoctrineFixtureModule\Utils\Exception\RuntimeException
      */
@@ -32,11 +32,11 @@ class ConnectionRegistryEventSubscriberFactory
     {
         $appServiceLocator = $serviceLocator instanceof AbstractPluginManager ?  $serviceLocator->getServiceLocator() : $serviceLocator;
 
-
         /** @var ManagerRegistryProviderInterface $managerRegistryProvider */
         $managerRegistryProvider = $appServiceLocator->get(ManagerRegistryProviderInterface::class);
         $managerRegistry = $managerRegistryProvider->getManagerRegistry();
 
-        return new ConnectionRegistryEventSubscriber($managerRegistry);
+
+        return new ManagerRegistryEventSubscriber($managerRegistry);
     }
 }

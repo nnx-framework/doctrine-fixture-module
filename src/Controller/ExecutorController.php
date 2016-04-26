@@ -3,16 +3,18 @@
  * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\DoctrineFixtureModule\Entity;
+namespace Nnx\DoctrineFixtureModule\Controller;
 
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\Console\Request as ConsoleRequest;
 
 /**
  * Class ExecutorController
  *
  * @package Nnx\DoctrineFixtureModule\Entity
+ *
  */
 class ExecutorController extends AbstractConsoleController
 {
@@ -29,6 +31,16 @@ class ExecutorController extends AbstractConsoleController
      * @var FixtureExecutorManagerInterface
      */
     protected $fixtureExecutorManager;
+
+    /**
+     * Разрешенные методы
+     *
+     * @var array
+     */
+    protected $allowedMethod = [
+        'import',
+        'purge'
+    ];
 
     /**
      * ExecutorController constructor.
@@ -48,15 +60,53 @@ class ExecutorController extends AbstractConsoleController
      */
     public function executeFixtureAction()
     {
+        $request = $this->getRequest();
     }
 
 
     /**
      *
      *
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
      */
     public function runExecutorAction()
     {
+        $request = $this->getRequest();
+        if (!$request instanceof ConsoleRequest) {
+            $errMsg = 'Request is not console';
+            throw new Exception\RuntimeException($errMsg);
+        }
+
+        $executorName = $request->getParam('executorName', null);
+        if (null === $executorName) {
+            $errMsg = 'Executor name is not defined';
+            throw new Exception\RuntimeException($errMsg);
+        }
+        $method       = $request->getParam('method', null);
+        if (null === $method) {
+            $errMsg = 'Executor method not defined';
+            throw new Exception\RuntimeException($errMsg);
+        }
+        $normalizeMethod = strtolower($method);
+        if (!in_array($normalizeMethod, $this->allowedMethod, true)) {
+            $errMsg = sprintf('Invalid executor method %s', $method);
+            throw new Exception\RuntimeException($errMsg);
+        }
+
+        $objectManager = $request->getParam('object-manager', null);
+
+        $executor = $this->getFixtureExecutorManager()->get($executorName);
+
+        switch ($method) {
+            case 'import': {
+                $executor->import();
+                break;
+            }
+            case 'purge': {
+                $executor->purge();
+                break;
+            }
+        }
     }
 
     /**

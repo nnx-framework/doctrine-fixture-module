@@ -18,16 +18,20 @@ interface ExecutorInterface
     /**
      * Импортировать данные из фикстур в базу
      *
+     * @param array $contextData
+     *
      * @return void
      */
-    public function import();
+    public function import(array $contextData = []);
 
     /**
      * Откатить данные на основе информации из фикстур
      *
+     * @param array $contextData
+     *
      * @return void
      */
-    public function purge();
+    public function purge(array $contextData = []);
 
 
     /**

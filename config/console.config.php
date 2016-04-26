@@ -5,7 +5,7 @@
  */
 namespace Nnx\DoctrineFixtureModule;
 
-use Nnx\DoctrineFixtureModule\Entity\ExecutorController;
+use Nnx\DoctrineFixtureModule\Controller\ExecutorController;
 
 return [
     'console' => [
@@ -13,7 +13,7 @@ return [
             'routes' => [
                 'doctrine-execute-fixture' => [
                     'options' => [
-                        'route'    => 'nnx:fixture execute-fixture --fixtureClassName',
+                        'route'    => 'nnx:fixture (import|purge):method fixture <fixtureClassName> [--default-object-manager=]',
                         'defaults' => [
                             'controller' => ExecutorController::class,
                             'action'     => 'executeFixture'
@@ -22,7 +22,7 @@ return [
                 ],
                 'doctrine-run-executor' => [
                     'options' => [
-                        'route'    => 'nnx:fixture run-executor --executorName',
+                        'route'    => 'nnx:fixture (import|purge):method executor <executorName> [--object-manager=]',
                         'defaults' => [
                             'controller' => ExecutorController::class,
                             'action'     => 'runExecutor'

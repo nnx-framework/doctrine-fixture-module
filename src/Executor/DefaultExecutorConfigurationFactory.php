@@ -5,11 +5,13 @@
  */
 namespace Nnx\DoctrineFixtureModule\Executor;
 
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Nnx\ModuleOptions\ModuleOptionsPluginManagerInterface;
 use Nnx\DoctrineFixtureModule\Options\ModuleOptions;
-use Doctrine\Common\EventSubscriber;
+
 
 /**
  * Class DefaultExecutorConfigurationFactory
@@ -24,6 +26,8 @@ class DefaultExecutorConfigurationFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $appServiceLocator = $serviceLocator instanceof AbstractPluginManager ? $serviceLocator->getServiceLocator() : $serviceLocator;
+
         $defaultExecutorConfiguration = new DefaultExecutorConfiguration();
 
         $eventManager = $defaultExecutorConfiguration->getEventManager();
@@ -35,9 +39,11 @@ class DefaultExecutorConfigurationFactory implements FactoryInterface
 
         $defaultFixtureEventListeners = $moduleOptions->getDefaultFixtureEventListeners();
 
+        /** @var FixtureInitializerManagerInterface $fixtureInitializerManager */
+        $fixtureInitializerManager = $appServiceLocator->get(FixtureInitializerManagerInterface::class);
+
         foreach ($defaultFixtureEventListeners as $listenerName) {
-            /** @var EventSubscriber $listener */
-            $listener = $serviceLocator->get($listenerName);
+            $listener = $fixtureInitializerManager->get($listenerName);
             $eventManager->addEventSubscriber($listener);
         }
 

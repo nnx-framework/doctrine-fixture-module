@@ -6,6 +6,9 @@
 namespace Nnx\DoctrineFixtureModule;
 
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerProviderInterface;
 use Nnx\ModuleOptions\ModuleConfigKeyProviderInterface;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -127,6 +130,13 @@ class Module implements
             FixtureExecutorManager::CONFIG_KEY,
             FixtureExecutorProviderInterface::class,
             'getFixtureExecutorConfig'
+        );
+
+        $serviceListener->addServiceManager(
+            FixtureInitializerManagerInterface::class,
+            FixtureInitializerManager::CONFIG_KEY,
+            FixtureInitializerProviderInterface::class,
+            'getFixtureInitializerConfig'
         );
     }
 
