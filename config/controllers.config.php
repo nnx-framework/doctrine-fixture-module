@@ -6,8 +6,8 @@
 namespace Nnx\DoctrineFixtureModule;
 
 
-use Nnx\DoctrineFixtureModule\Entity\ExecutorController;
-use Nnx\DoctrineFixtureModule\Entity\ExecutorControllerFactory;
+use Nnx\DoctrineFixtureModule\Controller\ExecutorController;
+use Nnx\DoctrineFixtureModule\Controller\ExecutorControllerFactory;
 
 return [
     'controllers' => [

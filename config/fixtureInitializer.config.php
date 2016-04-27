@@ -7,6 +7,8 @@ namespace Nnx\DoctrineFixtureModule;
 
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
 use Nnx\DoctrineFixtureModule\FixtureInitializer;
+
+
 return [
     FixtureInitializerManager::CONFIG_KEY => [
         'invokables'         => [
@@ -14,14 +16,15 @@ return [
         ],
         'factories'          => [
             FixtureInitializer\ConnectionRegistryEventSubscriber::class => FixtureInitializer\ConnectionRegistryEventSubscriberFactory::class,
-            FixtureInitializer\ManagerRegistryEventSubscriber::class => FixtureInitializer\ManagerRegistryEventSubscriberFactory::class,
+            FixtureInitializer\ManagerRegistryEventSubscriber::class    => FixtureInitializer\ManagerRegistryEventSubscriberFactory::class,
+            FixtureInitializer\ObjectManagerNameInitializer::class      => FixtureInitializer\ObjectManagerNameInitializerFactory::class
         ],
         'abstract_factories' => [
 
         ],
         'shared'             => [
             FixtureInitializer\ConnectionRegistryEventSubscriber::class => true,
-            FixtureInitializer\ManagerRegistryEventSubscriber::class => true,
+            FixtureInitializer\ManagerRegistryEventSubscriber::class    => true,
         ]
     ],
 ];

@@ -11,6 +11,7 @@ use Doctrine\Fixture\Configuration;
 use Doctrine\Fixture\Loader\ChainLoader;
 use Doctrine\Fixture\Filter\ChainFilter;
 use Doctrine\Fixture\Executor as FixtureExecutor;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
 
 /**
  * Class Executor
@@ -63,18 +64,33 @@ class Executor implements ExecutorInterface
     protected $fixtureExecutorBuilder;
 
     /**
+     * Инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
      * @var array
      */
-    protected $contextFixtureInitializer = [];
+    protected $contextInitializer = [];
+
+    /**
+     * Менеджер Initializer'ов
+     *
+     * @var FixtureInitializerManagerInterface
+     */
+    protected $fixtureInitializerManager;
 
     /**
      * Executor constructor.
      *
-     * @param Configuration                   $configuration
-     * @param FixtureExecutorBuilderInterface $fixtureExecutorBuilder
+     * @param Configuration                      $configuration
+     * @param FixtureExecutorBuilderInterface    $fixtureExecutorBuilder
+     * @param FixtureInitializerManagerInterface $fixtureInitializerManager
      */
-    public function __construct(Configuration $configuration, FixtureExecutorBuilderInterface $fixtureExecutorBuilder)
-    {
+    public function __construct(
+        Configuration $configuration,
+        FixtureExecutorBuilderInterface $fixtureExecutorBuilder,
+        FixtureInitializerManagerInterface $fixtureInitializerManager
+    ) {
+        $this->setFixtureInitializerManager($fixtureInitializerManager);
         $this->setConfiguration($configuration);
         $this->setFixtureExecutorBuilder($fixtureExecutorBuilder);
     }
@@ -182,10 +198,37 @@ class Executor implements ExecutorInterface
      */
     public function import(array $contextData = [])
     {
+        $this->execute(FixtureExecutor::IMPORT, $contextData);
+    }
+
+    /**
+     * Запускает фикстуры
+     *
+     * @param       $method
+     * @param array $contextData
+     *
+     * @return void
+     */
+    protected function execute($method, array $contextData = [])
+    {
         $loader = $this->getLoader();
         $filter = $this->getFilter();
 
-        $this->getFixtureExecutor()->execute($loader, $filter, FixtureExecutor::IMPORT);
+        $contextInitializer = $this->getContextInitializer();
+        $fixtureInitializerManager = $this->getFixtureInitializerManager();
+        $eventManager = $this->getConfiguration()->getEventManager();
+        $initializers = [];
+        foreach ($contextInitializer as $initializerName) {
+            $initializer = $fixtureInitializerManager->get($initializerName, $contextData);
+            $initializers[] = $initializer;
+            $eventManager->addEventSubscriber($initializer);
+        }
+
+        $this->getFixtureExecutor()->execute($loader, $filter, $method);
+
+        foreach ($initializers as $initializer) {
+            $eventManager->removeEventSubscriber($initializer);
+        }
     }
 
 
@@ -196,10 +239,7 @@ class Executor implements ExecutorInterface
      */
     public function purge(array $contextData = [])
     {
-        $loader = $this->getLoader();
-        $filter = $this->getFilter();
-
-        $this->getFixtureExecutor()->execute($loader, $filter, FixtureExecutor::PURGE);
+        $this->execute(FixtureExecutor::PURGE, $contextData);
     }
 
     /**
@@ -246,6 +286,57 @@ class Executor implements ExecutorInterface
     public function setFixtureExecutorBuilder(FixtureExecutorBuilderInterface $fixtureExecutorBuilder)
     {
         $this->fixtureExecutorBuilder = $fixtureExecutorBuilder;
+
+        return $this;
+    }
+
+
+    /**
+     * Возвращает инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
+     * @return array
+     */
+    public function getContextInitializer()
+    {
+        return $this->contextInitializer;
+    }
+
+    /**
+     * Устанавлиает инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
+     * @param array $contextInitializer
+     *
+     * @return $this
+     */
+    public function setContextInitializer($contextInitializer)
+    {
+        $this->contextInitializer = $contextInitializer;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает менеджер Initializer'ов
+     *
+     * @return FixtureInitializerManagerInterface
+     */
+    public function getFixtureInitializerManager()
+    {
+        return $this->fixtureInitializerManager;
+    }
+
+    /**
+     * Устанавливает менеджер Initializer'ов
+     *
+     * @param FixtureInitializerManagerInterface $fixtureInitializerManager
+     *
+     * @return $this
+     */
+    public function setFixtureInitializerManager(FixtureInitializerManagerInterface $fixtureInitializerManager)
+    {
+        $this->fixtureInitializerManager = $fixtureInitializerManager;
 
         return $this;
     }

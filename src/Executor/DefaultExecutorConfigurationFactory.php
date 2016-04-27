@@ -37,7 +37,7 @@ class DefaultExecutorConfigurationFactory implements FactoryInterface
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $moduleOptionsPluginManager->get(ModuleOptions::class);
 
-        $defaultFixtureEventListeners = $moduleOptions->getDefaultFixtureEventListeners();
+        $defaultFixtureEventListeners = $moduleOptions->getFixtureInitializer();
 
         /** @var FixtureInitializerManagerInterface $fixtureInitializerManager */
         $fixtureInitializerManager = $appServiceLocator->get(FixtureInitializerManagerInterface::class);

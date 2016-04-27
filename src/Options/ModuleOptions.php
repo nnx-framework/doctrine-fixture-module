@@ -42,7 +42,15 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
      *
      * @var array
      */
-    protected $defaultFixtureEventListeners = [];
+    protected $fixtureInitializer = [];
+
+    /**
+     * Инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
+     * @var array
+     */
+    protected $contextInitializer = [];
 
     /**
      * Возвращает конфиг фикстур
@@ -121,21 +129,47 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
      *
      * @return array
      */
-    public function getDefaultFixtureEventListeners()
+    public function getFixtureInitializer()
     {
-        return $this->defaultFixtureEventListeners;
+        return $this->fixtureInitializer;
     }
 
     /**
      * Устанавливает набор подписчиков на события бросаемые компонентами модуля doctrine/data-fixtures
      *
-     * @param array $defaultFixtureEventListeners
+     * @param array $fixtureInitializer
      *
      * @return $this
      */
-    public function setDefaultFixtureEventListeners(array $defaultFixtureEventListeners)
+    public function setFixtureInitializer(array $fixtureInitializer)
     {
-        $this->defaultFixtureEventListeners = $defaultFixtureEventListeners;
+        $this->fixtureInitializer = $fixtureInitializer;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
+     * @return array
+     */
+    public function getContextInitializer()
+    {
+        return $this->contextInitializer;
+    }
+
+    /**
+     * Устанавлиает инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+     * данные контекста
+     *
+     * @param array $contextInitializer
+     *
+     * @return $this
+     */
+    public function setContextInitializer($contextInitializer)
+    {
+        $this->contextInitializer = $contextInitializer;
 
         return $this;
     }

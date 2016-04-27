@@ -46,11 +46,13 @@ class ExecutorControllerTest extends AbstractConsoleControllerTestCase
 
 
     /**
+     * Проверка запуска фикстур через Executor
      *
      * @throws \Exception
      */
     public function testRunExecutorAction()
     {
-        $this->dispatch('nnx:fixture import executor testFilterUsedFixture --default-object-manager=doctrine.entitymanager.test');
+        $this->dispatch('nnx:fixture import executor testFilterUsedFixture --object-manager=doctrine.entitymanager.test');
+        $this->assertConsoleOutputContains('All fixture completed');
     }
 }

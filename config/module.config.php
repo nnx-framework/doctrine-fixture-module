@@ -7,22 +7,41 @@ namespace Nnx\DoctrineFixtureModule;
 
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ConnectionRegistryEventSubscriber;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ManagerRegistryEventSubscriber;
-
+use Nnx\DoctrineFixtureModule\FixtureInitializer\ObjectManagerNameInitializer;
 
 $config = [
     Module::CONFIG_KEY => [
+        /**
+         * В данной секции описываются загрузчкики фикстур
+         */
         'fixturesLoaders'              => [
 
         ],
+        /**
+         * Описание фильтров фикстур
+         */
         'filters'                      => [
 
         ],
+        /**
+         * Описание компонентов отвечающих за запуск фикстур
+         */
         'executors'                    => [
 
         ],
-        'defaultFixtureEventListeners' => [
+        /**
+         * Описание инициалайзеров (используются для внедрения зависимостей), которые загружаются для каждого Executor'a
+         */
+        'fixtureInitializer' => [
             ConnectionRegistryEventSubscriber::class => ConnectionRegistryEventSubscriber::class,
             ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriber::class
+        ],
+        /**
+         * Инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
+         * данные контекста
+         */
+        'contextInitializer' => [
+            ObjectManagerNameInitializer::class => ObjectManagerNameInitializer::class
         ]
     ]
 ];

@@ -5,6 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule\Executor;
 
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
+use Nnx\ModuleOptions\ModuleOptionsPluginManagerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\MutableCreationOptionsInterface;
@@ -14,6 +16,7 @@ use Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface;
 use Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface;
 use ReflectionClass;
 use Doctrine\Fixture\Configuration;
+use Nnx\DoctrineFixtureModule\Options\ModuleOptions;
 
 /**
  * Class ExecutorFactory
@@ -32,10 +35,7 @@ class ExecutorFactory implements FactoryInterface, MutableCreationOptionsInterfa
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $appServiceLocator = $serviceLocator;
-        if ($serviceLocator instanceof AbstractPluginManager) {
-            $appServiceLocator = $serviceLocator->getServiceLocator();
-        }
+        $appServiceLocator = $serviceLocator instanceof AbstractPluginManager ? $serviceLocator->getServiceLocator() :$serviceLocator;
 
         $creationOptions = $this->getCreationOptions();
 
@@ -71,7 +71,12 @@ class ExecutorFactory implements FactoryInterface, MutableCreationOptionsInterfa
             $errMsg = 'Invalid fixture executor builder';
             throw new Exception\RuntimeException($errMsg);
         }
-        $executor = new Executor($configuration, $builder);
+
+
+        /** @var FixtureInitializerManagerInterface $fixtureInitializerManager */
+        $fixtureInitializerManager = $appServiceLocator->get(FixtureInitializerManagerInterface::class);
+
+        $executor = new Executor($configuration, $builder, $fixtureInitializerManager);
 
 
         if (array_key_exists('fixturesLoader', $creationOptions)) {
@@ -102,6 +107,15 @@ class ExecutorFactory implements FactoryInterface, MutableCreationOptionsInterfa
         if (array_key_exists('name', $creationOptions)) {
             $executor->setName($creationOptions['name']);
         }
+
+        /** @var ModuleOptionsPluginManagerInterface $moduleOptionsPluginManager */
+        $moduleOptionsPluginManager = $appServiceLocator->get(ModuleOptionsPluginManagerInterface::class);
+
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions = $moduleOptionsPluginManager->get(ModuleOptions::class);
+
+        $executor->setContextInitializer($moduleOptions->getContextInitializer());
+
 
         return $executor;
     }

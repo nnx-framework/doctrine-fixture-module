@@ -3,7 +3,7 @@
  * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\DoctrineFixtureModule\Entity;
+namespace Nnx\DoctrineFixtureModule\Controller;
 
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;

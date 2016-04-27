@@ -5,10 +5,13 @@
  */
 namespace Nnx\DoctrineFixtureModule\Controller;
 
+use Nnx\DoctrineFixtureModule\Event\ExecutorDispatcherEvent;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
+use Nnx\DoctrineFixtureModule\Listener\ExecutorDispatcherInterface;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\Console\Request as ConsoleRequest;
+use Zend\View\Model\ConsoleModel;
 
 /**
  * Class ExecutorController
@@ -65,9 +68,10 @@ class ExecutorController extends AbstractConsoleController
 
 
     /**
-     *
+     * Запук Executor'a
      *
      * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Nnx\DoctrineFixtureModule\Event\Exception\RuntimeException
      */
     public function runExecutorAction()
     {
@@ -93,20 +97,43 @@ class ExecutorController extends AbstractConsoleController
             throw new Exception\RuntimeException($errMsg);
         }
 
-        $objectManager = $request->getParam('object-manager', null);
+        $contextData = [];
+        $objectManagerName = $request->getParam('object-manager', null);
+        if (null !== $objectManagerName) {
+            $contextData['objectManagerName'] = $objectManagerName;
+        }
 
         $executor = $this->getFixtureExecutorManager()->get($executorName);
 
+        $console = $this->getConsole();
+        $console->writeLine(sprintf('Run fixture executor %s', $executorName));
+
+        $eventSharedManager = $this->getEventManager()->getSharedManager();
+        $listener = $eventSharedManager->attach(
+            ExecutorDispatcherInterface::class,
+            ExecutorDispatcherEvent::class,
+            function (ExecutorDispatcherEvent $e) use ($console) {
+                $console->writeLine(sprintf('Execute fixture: %s', get_class($e->getFixture())));
+            }
+        );
+
+        $console->writeLine("\n");
+
         switch ($method) {
             case 'import': {
-                $executor->import();
+                $executor->import($contextData);
                 break;
             }
             case 'purge': {
-                $executor->purge();
+                $executor->purge($contextData);
                 break;
             }
         }
+        $eventSharedManager->detach(ExecutorDispatcherInterface::class, $listener);
+
+        return [
+            ConsoleModel::RESULT => 'All fixture completed'
+        ];
     }
 
     /**
