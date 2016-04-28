@@ -6,9 +6,10 @@
 namespace Nnx\DoctrineFixtureModule\Controller;
 
 use Nnx\DoctrineFixtureModule\Event\ExecutorDispatcherEvent;
+use Nnx\DoctrineFixtureModule\Executor\ClassListFixtureExecutor;
+use Nnx\DoctrineFixtureModule\Executor\ExecutorInterface;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
 use Nnx\DoctrineFixtureModule\Listener\ExecutorDispatcherInterface;
-use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\View\Model\ConsoleModel;
@@ -21,13 +22,6 @@ use Zend\View\Model\ConsoleModel;
  */
 class ExecutorController extends AbstractConsoleController
 {
-    /**
-     * Провайдер для получения ManagerRegistry
-     *
-     * @var ManagerRegistryProviderInterface
-     */
-    protected $managerRegistryProvider;
-
     /**
      * Менеджер для получения Executor'ов
      *
@@ -48,45 +42,71 @@ class ExecutorController extends AbstractConsoleController
     /**
      * ExecutorController constructor.
      *
-     * @param ManagerRegistryProviderInterface $managerRegistryProvider
-     * @param FixtureExecutorManagerInterface  $fixtureExecutorManager
+     * @param FixtureExecutorManagerInterface $fixtureExecutorManager
      */
-    public function __construct(ManagerRegistryProviderInterface $managerRegistryProvider, FixtureExecutorManagerInterface $fixtureExecutorManager)
+    public function __construct(FixtureExecutorManagerInterface $fixtureExecutorManager)
     {
-        $this->setManagerRegistryProvider($managerRegistryProvider);
         $this->setFixtureExecutorManager($fixtureExecutorManager);
     }
 
     /**
+     * Запускает фикстуры
      *
      *
+     * @throws \Nnx\DoctrineFixtureModule\Event\Exception\RuntimeException
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
      */
     public function executeFixtureAction()
     {
-        $request = $this->getRequest();
+        $method = $this->getExecutorMethod();
+
+        $contextData = [];
+        $objectManagerName = $this->getObjectManagerName();
+
+        if (null !== $objectManagerName) {
+            $contextData['objectManagerName'] = $objectManagerName;
+        }
+
+        $classList = $this->getFixtureClassList();
+
+        $creationOptions = [
+            'classList' => $classList
+        ];
+        $executor = $this->getFixtureExecutorManager()->get(ClassListFixtureExecutor::class, $creationOptions);
+
+        $this->runFixture($executor, $method, $contextData);
+
+
+        return [
+            ConsoleModel::RESULT => 'All fixture completed'
+        ];
     }
 
+    /**
+     * Возвращает список фикстур которые необходимо выпонить
+     *
+     * @return array
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     */
+    protected function getFixtureClassList()
+    {
+        $request = $this->getConsoleRequest();
+        $classListStr = preg_replace('/ {2,}/', ' ', trim($request->getParam('fixtureClassName', '')));
+
+        return explode(' ', $classListStr);
+    }
 
     /**
-     * Запук Executor'a
+     * Возвращает метод для Executor'a
      *
+     * @return string
      * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
-     * @throws \Nnx\DoctrineFixtureModule\Event\Exception\RuntimeException
      */
-    public function runExecutorAction()
+    protected function getExecutorMethod()
     {
-        $request = $this->getRequest();
-        if (!$request instanceof ConsoleRequest) {
-            $errMsg = 'Request is not console';
-            throw new Exception\RuntimeException($errMsg);
-        }
+        $request = $this->getConsoleRequest();
 
-        $executorName = $request->getParam('executorName', null);
-        if (null === $executorName) {
-            $errMsg = 'Executor name is not defined';
-            throw new Exception\RuntimeException($errMsg);
-        }
-        $method       = $request->getParam('method', null);
+        $method = $request->getParam('method', null);
         if (null === $method) {
             $errMsg = 'Executor method not defined';
             throw new Exception\RuntimeException($errMsg);
@@ -97,16 +117,76 @@ class ExecutorController extends AbstractConsoleController
             throw new Exception\RuntimeException($errMsg);
         }
 
+        return $normalizeMethod;
+    }
+
+    /**
+     * Возвращает имя ObjectManager'a
+     *
+     * @return string|null
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     */
+    protected function getObjectManagerName()
+    {
+        $request = $this->getConsoleRequest();
+
+        return $request->getParam('object-manager', null);
+    }
+
+    /**
+     * Возвращает консольный запрос
+     *
+     * @return ConsoleRequest
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     */
+    protected function getConsoleRequest()
+    {
+        $request = $this->getRequest();
+        if (!$request instanceof ConsoleRequest) {
+            $errMsg = 'Request is not console';
+            throw new Exception\RuntimeException($errMsg);
+        }
+
+        return $request;
+    }
+
+    /**
+     * Запук Executor'a
+     *
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Nnx\DoctrineFixtureModule\Event\Exception\RuntimeException
+     */
+    public function runExecutorAction()
+    {
+        $executorName = $this->getExecutorName();
+        $method = $this->getObjectManagerName();
+
         $contextData = [];
-        $objectManagerName = $request->getParam('object-manager', null);
+        $objectManagerName = $this->getObjectManagerName();
         if (null !== $objectManagerName) {
             $contextData['objectManagerName'] = $objectManagerName;
         }
 
         $executor = $this->getFixtureExecutorManager()->get($executorName);
 
+        $this->runFixture($executor, $method, $contextData);
+
+        return [
+            ConsoleModel::RESULT => 'All fixture completed'
+        ];
+    }
+
+    /**
+     * Запуск выполнения фикстур
+     *
+     * @param ExecutorInterface $executor
+     * @param                   $method
+     * @param array             $contextData
+     */
+    protected function runFixture(ExecutorInterface $executor, $method, array $contextData = [])
+    {
         $console = $this->getConsole();
-        $console->writeLine(sprintf('Run fixture executor %s', $executorName));
+        $console->writeLine(sprintf('Run fixture executor %s', $executor->getName()));
 
         $eventSharedManager = $this->getEventManager()->getSharedManager();
         $listener = $eventSharedManager->attach(
@@ -130,35 +210,29 @@ class ExecutorController extends AbstractConsoleController
             }
         }
         $eventSharedManager->detach(ExecutorDispatcherInterface::class, $listener);
-
-        return [
-            ConsoleModel::RESULT => 'All fixture completed'
-        ];
     }
+
 
     /**
-     * Возвращает провайдер для получения ManagerRegistry
+     * Вовзращает имя Executor'a
      *
-     * @return ManagerRegistryProviderInterface
+     * @return string
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
      */
-    public function getManagerRegistryProvider()
+    protected function getExecutorName()
     {
-        return $this->managerRegistryProvider;
+        $request = $this->getConsoleRequest();
+        $executorName = $request->getParam('executorName', null);
+
+
+        if (null === $executorName) {
+            $errMsg = 'Executor name is not defined';
+            throw new Exception\RuntimeException($errMsg);
+        }
+
+        return $executorName;
     }
 
-    /**
-     * Устанавливает провайдер для получения ManagerRegistry
-     *
-     * @param ManagerRegistryProviderInterface $managerRegistryProvider
-     *
-     * @return $this
-     */
-    public function setManagerRegistryProvider(ManagerRegistryProviderInterface $managerRegistryProvider)
-    {
-        $this->managerRegistryProvider = $managerRegistryProvider;
-
-        return $this;
-    }
 
     /**
      * Возвращает менеджер для получения Executor'ов

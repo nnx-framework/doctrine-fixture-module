@@ -6,8 +6,7 @@
 namespace Nnx\DoctrineFixtureModule\FixtureInitializer;
 
 use Doctrine\Fixture\Event\FixtureEvent;
-use Doctrine\Fixture\Event\ImportFixtureEventListener;
-use Doctrine\Fixture\Event\PurgeFixtureEventListener;
+
 
 /**
  * Class ObjectManagerNameInitializer
@@ -34,16 +33,6 @@ class ObjectManagerNameInitializer extends AbstractContextInitializer
         $this->setContextData($contextData);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            ImportFixtureEventListener::IMPORT,
-            PurgeFixtureEventListener::PURGE,
-        ];
-    }
 
     /**
      * {@inheritdoc}

@@ -6,7 +6,6 @@
 namespace Nnx\DoctrineFixtureModule\Controller;
 
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface;
-use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -30,12 +29,11 @@ class ExecutorControllerFactory implements FactoryInterface
         if ($serviceLocator instanceof AbstractPluginManager) {
             $appServiceLocator = $serviceLocator->getServiceLocator();
         }
-        /** @var ManagerRegistryProviderInterface $managerRegistryProvider */
-        $managerRegistryProvider = $appServiceLocator->get(ManagerRegistryProviderInterface::class);
+
         /** @var FixtureExecutorManagerInterface $fixtureExecutorManager */
         $fixtureExecutorManager = $appServiceLocator->get(FixtureExecutorManagerInterface::class);
 
 
-        return new ExecutorController($managerRegistryProvider, $fixtureExecutorManager);
+        return new ExecutorController($fixtureExecutorManager);
     }
 }

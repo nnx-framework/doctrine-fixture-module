@@ -7,8 +7,9 @@ namespace Nnx\DoctrineFixtureModule\PhpUnit\Test\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
+use Zend\Console\Request;
 use Zend\Test\PHPUnit\Controller\AbstractConsoleControllerTestCase;
-
+use Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp;
 
 /**
  * Class ExecutorControllerTest
@@ -53,6 +54,39 @@ class ExecutorControllerTest extends AbstractConsoleControllerTestCase
     public function testRunExecutorAction()
     {
         $this->dispatch('nnx:fixture import executor testFilterUsedFixture --object-manager=doctrine.entitymanager.test');
+        $this->assertConsoleOutputContains('All fixture completed');
+    }
+
+
+
+    /**
+     * Проверка запуска фикстур через Executor
+     *
+     * @throws \Exception
+     */
+    public function testExecuteFixture()
+    {
+        $fixtures = [
+            FixtureTestApp\TestModule1\FooFixture::class,
+            FixtureTestApp\TestModule1\BarFixture::class,
+            FixtureTestApp\FixturesDir\FooFixture::class
+        ];
+        $fixturesStr = implode(' ', $fixtures);
+
+        $commandParts = [
+            'nnx:fixture',
+            'import',
+            'fixture',
+            "{$fixturesStr}",
+            '--object-manager=doctrine.entitymanager.test'
+        ];
+
+        /** @var Request $request */
+        $request = $this->getApplication()->getRequest();
+        $request->setContent(implode(' ', $commandParts));
+        $request->params()->fromArray($commandParts);
+        $this->getApplication()->run();
+
         $this->assertConsoleOutputContains('All fixture completed');
     }
 }

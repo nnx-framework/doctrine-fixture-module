@@ -110,6 +110,16 @@ return [
                         ]
                     ]
                 ],
+            ],
+            'testInjectObjectManagerNameFixture' => [
+                [
+                    'name' => ClassLoader::class,
+                    'options' => [
+                        'classList' => [
+                            TestModule1\TestInjectObjectManagerNameFixture::class
+                        ]
+                    ]
+                ],
             ]
         ],
         'filters' => [
@@ -139,7 +149,11 @@ return [
             'testDuplicateFixtures' => [
                 'fixturesLoader' => 'testDuplicateFixtures',
                 'filter' => 'testFilterUsedFixture'
+            ],
+            'testInjectObjectManagerNameFixture' => [
+                'fixturesLoader' => 'testInjectObjectManagerNameFixture',
             ]
+
         ]
 
     ]

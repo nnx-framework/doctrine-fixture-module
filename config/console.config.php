@@ -13,7 +13,7 @@ return [
             'routes' => [
                 'doctrine-execute-fixture' => [
                     'options' => [
-                        'route'    => 'nnx:fixture (import|purge):method fixture <fixtureClassName> [--default-object-manager=]',
+                        'route'    => 'nnx:fixture (import|purge):method fixture <fixtureClassName> [--object-manager=]',
                         'defaults' => [
                             'controller' => ExecutorController::class,
                             'action'     => 'executeFixture'

@@ -5,6 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule;
 
+use Nnx\DoctrineFixtureModule\Executor\ClassListFixtureExecutor;
+use Nnx\DoctrineFixtureModule\Executor\ClassListFixtureExecutorFactory;
 use Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManager;
 use Nnx\DoctrineFixtureModule\Executor\Executor;
 use Nnx\DoctrineFixtureModule\Executor\ExecutorFactory;
@@ -16,13 +18,14 @@ return [
 
         ],
         'factories'          => [
-            Executor::class => ExecutorFactory::class
+            Executor::class                 => ExecutorFactory::class,
+            ClassListFixtureExecutor::class => ClassListFixtureExecutorFactory::class
 
         ],
         'abstract_factories' => [
             AbstractExecutorFactory::class => AbstractExecutorFactory::class
         ],
-        'shared' => [
+        'shared'             => [
             Executor::class => false
         ]
     ],

@@ -114,8 +114,11 @@ class FilterUsedFixtureIntegrationTest extends AbstractHttpControllerTestCase
             FixtureTestApp\FixturesDir\FooFixture::class,
             FixtureTestApp\TestModule1\BazFixture::class
         ];
-
         $firstRunUsedFixtures = $listUsedFixtures;
+
+        sort($expectedUsedFixtures, SORT_STRING);
+        sort($firstRunUsedFixtures, SORT_STRING);
+
         static::assertEquals($expectedUsedFixtures, $firstRunUsedFixtures);
 
         /** @var ObjectManager $em */
