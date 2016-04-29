@@ -102,7 +102,7 @@ class ExecutorController extends AbstractConsoleController
      * @return string
      * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
      */
-    protected function getExecutorMethod()
+    public function getExecutorMethod()
     {
         $request = $this->getConsoleRequest();
 
@@ -159,7 +159,7 @@ class ExecutorController extends AbstractConsoleController
     public function runExecutorAction()
     {
         $executorName = $this->getExecutorName();
-        $method = $this->getObjectManagerName();
+        $method = $this->getExecutorMethod();
 
         $contextData = [];
         $objectManagerName = $this->getObjectManagerName();
@@ -191,7 +191,7 @@ class ExecutorController extends AbstractConsoleController
         $eventSharedManager = $this->getEventManager()->getSharedManager();
         $listener = $eventSharedManager->attach(
             ExecutorDispatcherInterface::class,
-            ExecutorDispatcherEvent::class,
+            ExecutorDispatcherEvent::FINISH_FIXTURE_EVENT,
             function (ExecutorDispatcherEvent $e) use ($console) {
                 $console->writeLine(sprintf('Execute fixture: %s', get_class($e->getFixture())));
             }
@@ -219,11 +219,10 @@ class ExecutorController extends AbstractConsoleController
      * @return string
      * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
      */
-    protected function getExecutorName()
+    public function getExecutorName()
     {
         $request = $this->getConsoleRequest();
         $executorName = $request->getParam('executorName', null);
-
 
         if (null === $executorName) {
             $errMsg = 'Executor name is not defined';

@@ -6,10 +6,14 @@
 namespace Nnx\DoctrineFixtureModule\PhpUnit\Test\Controller;
 
 use Doctrine\ORM\Tools\SchemaTool;
+use Nnx\DoctrineFixtureModule\Controller\ExecutorController;
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\TestPaths;
 use Zend\Console\Request;
+use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Test\PHPUnit\Controller\AbstractConsoleControllerTestCase;
 use Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp;
+use Zend\Console\Request as ConsoleRequest;
 
 /**
  * Class ExecutorControllerTest
@@ -51,12 +55,23 @@ class ExecutorControllerTest extends AbstractConsoleControllerTestCase
      *
      * @throws \Exception
      */
-    public function testRunExecutorAction()
+    public function testRunImportExecutorAction()
     {
         $this->dispatch('nnx:fixture import executor testFilterUsedFixture --object-manager=doctrine.entitymanager.test');
         $this->assertConsoleOutputContains('All fixture completed');
     }
 
+
+    /**
+     * Проверка запуска фикстур через Executor
+     *
+     * @throws \Exception
+     */
+    public function testRunPurgeExecutorAction()
+    {
+        $this->dispatch('nnx:fixture purge executor testFilterUsedFixture --object-manager=doctrine.entitymanager.test');
+        $this->assertConsoleOutputContains('All fixture completed');
+    }
 
 
     /**
@@ -88,5 +103,123 @@ class ExecutorControllerTest extends AbstractConsoleControllerTestCase
         $this->getApplication()->run();
 
         $this->assertConsoleOutputContains('All fixture completed');
+    }
+
+    /**
+     * Проверка ситуации когда происходит работа с не консольным запросом
+     *
+     * @expectedException \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @expectedExceptionMessage Request is not console
+     *
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Zend\Console\Exception\RuntimeException
+     */
+    public function testNotConsoleRequest()
+    {
+        /** @var ServiceLocatorInterface $controllerPluginManager */
+        $controllerPluginManager = $this->getApplicationServiceLocator()->get('ControllerLoader');
+
+        /** @var ExecutorController $controller */
+        $controller = $controllerPluginManager->get(ExecutorController::class);
+
+
+        $controller->getExecutorMethod();
+    }
+
+
+    /**
+     * Проверка ситуации когда не указан метод Executor'a
+     *
+     * @expectedException \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @expectedExceptionMessage Executor method not defined
+     *
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Zend\Console\Exception\RuntimeException
+     */
+    public function testExecutorMethodNotSpecified()
+    {
+        /** @var ServiceLocatorInterface $controllerPluginManager */
+        $controllerPluginManager = $this->getApplicationServiceLocator()->get('ControllerLoader');
+
+        $request = new ConsoleRequest();
+
+        /** @var ExecutorController $controller */
+        $controller = $controllerPluginManager->get(ExecutorController::class);
+        $controller->getEventManager()->attach(
+            MvcEvent::EVENT_DISPATCH,
+            function (MvcEvent $e) {
+                $e->stopPropagation(true);
+            },
+            PHP_INT_MAX
+        );
+        $controller->dispatch($request);
+
+        $controller->getExecutorMethod();
+    }
+
+    /**
+     * Проверка ситуации когда указан некорректный методя у Executor'a
+     *
+     * @expectedException \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @expectedExceptionMessage Invalid executor method notAllowedMethod
+     *
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Zend\Console\Exception\RuntimeException
+     */
+    public function testInvalidExecutorMethodNotSpecified()
+    {
+        /** @var ServiceLocatorInterface $controllerPluginManager */
+        $controllerPluginManager = $this->getApplicationServiceLocator()->get('ControllerLoader');
+
+        $request = new ConsoleRequest();
+        $request->params()->set('method', 'notAllowedMethod');
+
+        /** @var ExecutorController $controller */
+        $controller = $controllerPluginManager->get(ExecutorController::class);
+        $controller->getEventManager()->attach(
+            MvcEvent::EVENT_DISPATCH,
+            function (MvcEvent $e) {
+                $e->stopPropagation(true);
+            },
+            PHP_INT_MAX
+        );
+        $controller->dispatch($request);
+
+        $controller->getExecutorMethod();
+    }
+
+
+    /**
+     * Проверка ситуации когда указан некорректный методя у Executor'a
+     *
+     * @expectedException \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @expectedExceptionMessage Executor name is not defined
+     *
+     * @throws \Zend\ServiceManager\Exception\ServiceNotFoundException
+     * @throws \Nnx\DoctrineFixtureModule\Controller\Exception\RuntimeException
+     * @throws \Zend\Console\Exception\RuntimeException
+     */
+    public function testExecutorNameNotSpecified()
+    {
+        /** @var ServiceLocatorInterface $controllerPluginManager */
+        $controllerPluginManager = $this->getApplicationServiceLocator()->get('ControllerLoader');
+
+        $request = new ConsoleRequest();
+
+        /** @var ExecutorController $controller */
+        $controller = $controllerPluginManager->get(ExecutorController::class);
+        $controller->getEventManager()->attach(
+            MvcEvent::EVENT_DISPATCH,
+            function (MvcEvent $e) {
+                $e->stopPropagation(true);
+            },
+            PHP_INT_MAX
+        );
+        $controller->dispatch($request);
+
+        $controller->getExecutorName();
     }
 }
