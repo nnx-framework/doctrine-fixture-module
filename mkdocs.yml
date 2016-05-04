@@ -2,6 +2,8 @@ docs_dir: doc/book/ru
 pages:
     - index.md
     - 'Быстрый старт': 'getting-started.md'
+    - 'Загрузчики фикстур': 'fixture-loader.md'
+    - 'Фильтры фикстур': 'fixture-filters.md'
 site_name: DoctrineFixtureModule
 site_description: 'Работа с фикстурами Doctrine2'
 repo_url: 'https://github.com/nnx-framework/doctrine-fixture-module'

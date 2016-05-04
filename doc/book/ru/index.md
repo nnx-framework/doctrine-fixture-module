@@ -5,4 +5,5 @@
 ## Оглавление
 
 - [Быстрый старт](getting-started.md)
-
+- [Загрузчики фикстур](fixture-loader.md)
+- [Фильтры фикстур](fixture-filters.md)
