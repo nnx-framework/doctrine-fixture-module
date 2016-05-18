@@ -24,17 +24,6 @@ class ObjectManagerNameInitializer extends AbstractContextInitializer
     const OBJECT_MANAGER_NAME = 'objectManagerName';
 
     /**
-     * ObjectManagerNameInitializer constructor.
-     *
-     * @param array $contextData
-     */
-    public function __construct(array $contextData = [])
-    {
-        $this->setContextData($contextData);
-    }
-
-
-    /**
      * {@inheritdoc}
      * @throws \Nnx\DoctrineFixtureModule\FixtureInitializer\Exception\RuntimeException
      */

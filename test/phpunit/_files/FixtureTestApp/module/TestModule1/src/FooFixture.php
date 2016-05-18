@@ -21,7 +21,7 @@ class FooFixture implements Fixture
      */
     public function import()
     {
-
+        return;
     }
 
     /**

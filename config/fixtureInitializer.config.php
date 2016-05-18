@@ -17,7 +17,8 @@ return [
         'factories'          => [
             FixtureInitializer\ConnectionRegistryEventSubscriber::class => FixtureInitializer\ConnectionRegistryEventSubscriberFactory::class,
             FixtureInitializer\ManagerRegistryEventSubscriber::class    => FixtureInitializer\ManagerRegistryEventSubscriberFactory::class,
-            FixtureInitializer\ObjectManagerNameInitializer::class      => FixtureInitializer\ObjectManagerNameInitializerFactory::class
+            FixtureInitializer\ObjectManagerNameInitializer::class      => FixtureInitializer\ObjectManagerNameInitializerFactory::class,
+            FixtureInitializer\ResourceLoaderInitializer::class         => FixtureInitializer\ResourceLoaderInitializerFactory::class
         ],
         'abstract_factories' => [
 

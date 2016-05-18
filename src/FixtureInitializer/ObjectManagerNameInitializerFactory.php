@@ -25,6 +25,8 @@ class ObjectManagerNameInitializerFactory implements FactoryInterface, MutableCr
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $context = $this->getCreationOptions();
-        return new ObjectManagerNameInitializer($context);
+        $objectManagerNameInitializer = new ObjectManagerNameInitializer();
+        $objectManagerNameInitializer->setContextData($context);
+        return $objectManagerNameInitializer;
     }
 }

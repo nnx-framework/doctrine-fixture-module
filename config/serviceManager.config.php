@@ -19,10 +19,14 @@ use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceInterface;
 use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureServiceFactory;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderManagerInterface;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProvider;
 use Nnx\DoctrineFixtureModule\Utils\ManagerRegistryProviderInterface;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderManager;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderServiceInterface;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderServiceFactory;
 
 return [
     'service_manager' => [
@@ -31,13 +35,15 @@ return [
             FixtureFilterManagerInterface::class      => FixtureFilterManager::class,
             FixtureExecutorManagerInterface::class    => FixtureExecutorManager::class,
             ManagerRegistryProviderInterface::class   => ManagerRegistryProvider::class,
-            FixtureInitializerManagerInterface::class => FixtureInitializerManager::class
+            FixtureInitializerManagerInterface::class => FixtureInitializerManager::class,
+            ResourceLoaderManagerInterface::class     => ResourceLoaderManager::class
         ],
         'factories'          => [
             DefaultExecutorConfiguration::class      => DefaultExecutorConfigurationFactory::class,
             FixtureExecutorBuilderInterface::class   => FixtureExecutorBuilderFactory::class,
             FilterUsedFixtureListener::class         => FilterUsedFixtureListenerFactory::class,
-            FilterUsedFixtureServiceInterface::class => FilterUsedFixtureServiceFactory::class
+            FilterUsedFixtureServiceInterface::class => FilterUsedFixtureServiceFactory::class,
+            ResourceLoaderServiceInterface::class    => ResourceLoaderServiceFactory::class
         ],
         'abstract_factories' => [
 

@@ -1,6 +1,6 @@
 # Фильтры фикстур
 
-Фильтр фикстур - класс имплементирующий \Doctrine\Fixture\Filter\Filter, определяет условия того, какие фикстуры должны быть выполены. 
+Фильтр фикстур - класс, имплементирующий \Doctrine\Fixture\Filter\Filter, определяет условия того, какие фикстуры должны быть выполнены. 
 
 
 Для работы с фильтрами фикстур используется специальный менеджер плагинов - \Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface.
@@ -37,12 +37,12 @@ class ExampleFactory implements FactoryInterface
 
 Фильтр                                             |Описание
 ---------------------------------------------------|-------------------
-\Doctrine\Fixture\Filter\ChainFilter               |Позволяет объеденить фильтры в цепочку
+\Doctrine\Fixture\Filter\ChainFilter               |Позволяет объединить фильтры в цепочку
 \Doctrine\Fixture\Filter\GroupedFilter             |Позволяет запускать фикстуры принадлежащие к определенной группе
 \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture|Обеспечивает возможность не выполнять фикстуры повторно
 
 
-Каждый из этих фильтро фикстур зарегестрирован в менеджере плагинов \Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface.
+Каждый из этих фильтров фикстур зарегистрирован в менеджере плагинов \Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface.
 
 ## Фильтр \Doctrine\Fixture\Filter\ChainFilter
 
@@ -84,7 +84,7 @@ if ($fixtureFilterManager->get(\Doctrine\Fixture\Filter\ChainFilter::class, $opt
 помощью параметра filterList, можно указать массив объектов фильтров фикстур.
 
 После вызова метода accept у экземпляра объекта \Doctrine\Fixture\Filter\ChainFilter, у всех фильтров фикстур, образующих
-цепочку, будет вызыван аналогичный метод, и произведена проверка, нужно ли выполнять данную фикстуру.
+цепочку, будет вызван аналогичный метод, и произведена проверка, нужно ли выполнять данную фикстуру.
 
 ## Фильтр \Doctrine\Fixture\Filter\GroupedFilter
 
@@ -128,7 +128,7 @@ class FixtureA implements GroupedFixture
 
 При создание экземпляра фильтра фикстур \Doctrine\Fixture\Filter\GroupedFilter через плагин менеджер, в опциях с 
 помощью параметра allowedGroupList, можно указать список групп, к которым должна относится фикстура, что бы она была 
-выполненна.
+выполнена.
 
 Также можно указать параметр onlyImplementors(значение по умолчанию false). Если этот параметр имеет значение true, то
 все фикстуры, которые не реализуют интерфейс \Doctrine\Fixture\Filter\GroupdFixteure, не будут выполнены.
@@ -158,23 +158,162 @@ if ($fixtureFilterManager->get(\Doctrine\Fixture\Filter\GroupedFilter::class, $o
 
 ## Фильтр \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture
 
-Фильтр позволяет для конркетного Executor'a (описанного в конфигах приложения), выполинть фикстуры только один раз. Таким 
-образом, повторый запуск такого Executor'a, не приведет к повторному выполнению, ранее выполенных фикстур, будут выполнены только, новые фикстуры.
+Фильтр позволяет для конкретного Executor'a (описанного в конфигах приложения), выполнить фикстуры только один раз. Таким 
+образом, повторный запуск такого Executor'a, не приведет к повторному выполнению, ранее выполненных фикстур, будут выполнены только, новые фикстуры.
+
+## Быстрый старт при использование \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture
+
+Необходимо зарегистрировать сущность для работы с \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture. В случае если
+для работы с Doctrine2 используется doctrine/doctrine-orm-module, необходимо в цепочку драйверов, которую использует
+ObjectManager Doctrine2, добавить драйвер для сущностей модуля nnx/doctrine-fixture-module.
+
+```php
+
+return [
+    'doctrine' => [
+        'entitymanager' => [
+            'orm_default' => [
+                'configuration' => 'orm_default',
+                'connection'    => 'orm_default',
+            ]
+        ],
+        'connection' => [
+            'orm_default' => [
+                'configuration' => 'orm_default',
+            ]
+        ],
+        'configuration' => [
+            'orm_default' => [
+                'driver'            => 'orm_default'
+            ]
+        ],
+        'driver' => [
+            'orm_default' => [
+                'class'   => 'Doctrine\ORM\Mapping\Driver\DriverChain',
+                'drivers' => [
+                    'Nnx\\DoctrineFixtureModule\\Entity' => 'Nnx\\DoctrineFixtureModule'
+                ]
+            ]
+        ]
+    ],
+];
 
 
-## Независимое использование фильтра \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture
+```
+
+###  Независимое использование фильтра \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture
 
 Для использования фильтра FilterUsedFixture, при его создание необходимо передать Executor, в контексте которого будет запускаться фикстура.
 
 ```php
 
-/** @var \Nnx\DoctrineFixtureModule\Executor\DefaultExecutorConfiguration $configuration */
-$configuration = $serviceLocator->get(\Nnx\DoctrineFixtureModule\Executor\DefaultExecutorConfiguration::class);
+//Создаем компонент отвечающий за запуск фикстур
+//Указываем через опции, его имя
+/** @var \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface $fixtureExecutorManager */
+$fixtureExecutorManager = $serviceLocator->get(\Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface::class);
+/** @var  \Nnx\DoctrineFixtureModule\Executor\Executor $executor  */
+$executor = $fixtureExecutorManager->get(\Nnx\DoctrineFixtureModule\Executor\Executor::class, [
+    'name' => 'myFixtureExecutor'
+]);
 
-/** @var \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderInterface $configuration */
-$builder = $serviceLocator->get(\Nnx\DoctrineFixtureModule\Executor\FixtureExecutorBuilderInterface::class);
+//Создаем загрузчик фикстур
+//Загрузчик знает как загрузить одну тестовую фикстуру
+/** @var \Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface $loaderManager */
+$loaderManager = $serviceLocator->get(\Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface::class);
+$options = [
+    'classList' => [
+        \Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule1\FooFixture::class
+    ]
+];
+/** @var \Doctrine\Fixture\Loader\ClassLoader::class $loader */
+$loader = $loaderManager->get(\Doctrine\Fixture\Loader\ClassLoader::class, $options);
 
+//Создаем фильтр. Указываем через параметры для какого Executor'a фильтр используется
+/** @var \Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface $fixtureFilterManager */
+$fixtureFilterManager = $serviceLocator->get(\Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface::class);
+$options = [
+    'contextExecutor' => $executor
+];
+$filter = $fixtureFilterManager->get(\Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture::class, $options);
+
+//Устанавливаем загрузчик и фильтр
+$executor->setLoader($loader);
+$executor->setFilter($filter);
+
+$executor->import();
 
 
 ```
 
+После того как будет запущен процесс загрузки(или удаления) данных из фикстуры, в специальной таблице 
+(@see \Nnx\DoctrineFixtureModule\Entity\UsedFixture) будет сохранена информация, о том, что для Executor'a с заданным
+именем (имя параметра name, используемое в опциях при создание Executor'a), была выполнена фикстура 
+ \Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule1\FooFixture. При повторном запуске,
+ данная фикстура выполняться не будет.
+ 
+###  Использование \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture с помощью конфигурации в приложение
+
+Для использования \Nnx\DoctrineFixtureModule\Filter\FilterUsedFixture с помощью конфигурации в приложение,
+можно руководствоваться следующим примером:
+
+Пример конфигурации:
+```php
+
+return [
+    'nnx_doctrine_fixture_module' => [
+        'fixturesLoaders' => [
+            'testChainFixtureLoader' => [
+                [
+                    'name' => ClassLoader::class,
+                    'options' => [
+                        'classList' => [
+                            TestModule1\FooFixture::class,
+                            TestModule1\BarFixture::class,
+                        ]
+                    ]
+                ],
+                [
+                    'name' => DirectoryLoader::class,
+                    'options' => [
+                        'directory' => __DIR__ . '/../../fixtures'
+                    ]
+                ],
+                [
+                    'name' => 'childTestChain',
+                ]
+            ],
+        ],
+        'filters' => [
+            'testFilterUsedFixture' => [
+                [
+                    'name' => FilterUsedFixture::class
+                ]
+            ]
+        ],
+        'executors' => [
+            'testFilterUsedFixture' => [
+                'fixturesLoader' => 'testChainFixtureLoader',
+                'filter' => 'testFilterUsedFixture'
+            ]
+
+        ]
+    ]
+];
+```
+
+Пример использования:
+
+```php
+
+/** @var FixtureExecutorManagerInterface $fixtureExecutorManager */
+$fixtureExecutorManager = $serviceLocator()->get(FixtureExecutorManagerInterface::class);
+$executor = $fixtureExecutorManager->get('testFilterUsedFixture');
+$executor->import();
+
+```
+
+В результате фикстуры описанные в fixturesLoaders (секция с именем testChainFixtureLoader), будут выполнены,
+только один раз.
+
+В базе данных в соответствующей таблице (@see \Nnx\DoctrineFixtureModule\Entity\UsedFixture), будет добавлена
+информация, о том, какие фикстуры были выполнены для Executor'a с именем testFilterUsedFixture.

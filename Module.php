@@ -9,6 +9,9 @@ use Nnx\DoctrineFixtureModule\FilterUsedFixtureService\FilterUsedFixtureListener
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerProviderInterface;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderManager;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderManagerInterface;
+use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderProviderInterface;
 use Nnx\ModuleOptions\ModuleConfigKeyProviderInterface;
 use Zend\Console\Adapter\AdapterInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -138,6 +141,13 @@ class Module implements
             FixtureInitializerProviderInterface::class,
             'getFixtureInitializerConfig'
         );
+
+        $serviceListener->addServiceManager(
+            ResourceLoaderManagerInterface::class,
+            ResourceLoaderManager::CONFIG_KEY,
+            ResourceLoaderProviderInterface::class,
+            'getResourceLoaderConfig'
+        );
     }
 
     /**
@@ -195,7 +205,19 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return array_merge_recursive(
+            include __DIR__ . '/config/serviceManager.config.php',
+            include __DIR__ . '/config/fixtureLoader.config.php',
+            include __DIR__ . '/config/fixtureFilter.config.php',
+            include __DIR__ . '/config/fixtureExecutor.config.php',
+            include __DIR__ . '/config/doctrine.config.php',
+            include __DIR__ . '/config/controllers.config.php',
+            include __DIR__ . '/config/console.config.php',
+            include __DIR__ . '/config/fixtureInitializer.config.php',
+            include __DIR__ . '/config/resourceLoader.config.php',
+            include __DIR__ . '/config/module.config.php'
+
+        );
     }
 
     /**

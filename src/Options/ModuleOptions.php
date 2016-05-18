@@ -53,6 +53,13 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
     protected $contextInitializer = [];
 
     /**
+     * Секция в которой описывается какой загрузчик ресурсво нужно применять, для фикстуры
+     *
+     * @var array
+     */
+    protected $resourceLoader = [];
+
+    /**
      * Возвращает конфиг фикстур
      *
      * @return array
@@ -170,6 +177,30 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
     public function setContextInitializer($contextInitializer)
     {
         $this->contextInitializer = $contextInitializer;
+
+        return $this;
+    }
+
+    /**
+     * Секция в которой описывается какой загрузчик ресурсво нужно применять, для фикстуры
+     *
+     * @return array
+     */
+    public function getResourceLoader()
+    {
+        return $this->resourceLoader;
+    }
+
+    /**
+     * Секция в которой описывается какой загрузчик ресурсво нужно применять, для фикстуры
+     *
+     * @param array $resourceLoader
+     *
+     * @return $this
+     */
+    public function setResourceLoader(array $resourceLoader = [])
+    {
+        $this->resourceLoader = $resourceLoader;
 
         return $this;
     }
