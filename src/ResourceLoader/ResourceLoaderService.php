@@ -5,6 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule\ResourceLoader;
 
+use Doctrine\Fixture\Fixture;
+
 /**
  * Class ResourceLoaderService
  *
@@ -34,7 +36,7 @@ class ResourceLoaderService implements ResourceLoaderServiceInterface
      */
     public function __construct(ResourceLoaderManagerInterface $resourceLoaderManager)
     {
-        $this->resourceLoaderManager = $resourceLoaderManager;
+        $this->setResourceLoaderManager($resourceLoaderManager);
     }
 
     /**
@@ -83,5 +85,53 @@ class ResourceLoaderService implements ResourceLoaderServiceInterface
         $this->resourceLoaderManager = $resourceLoaderManager;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws \Nnx\DoctrineFixtureModule\ResourceLoader\Exception\InvalidFixtureResourceLoaderConfigException
+     */
+    public function loadResourceForFixture(Fixture $fixture)
+    {
+        $classFixture = get_class($fixture);
+
+        $classFixtureToResourceLoader = $this->getClassFixtureToResourceLoader();
+        if (array_key_exists($classFixture, $classFixtureToResourceLoader)) {
+            $fixtureResourceLoaderConfig = $this->buildFixtureResourceLoaderConfig($classFixtureToResourceLoader[$classFixture]);
+            $fixtureResourceLoader = $this->getResourceLoaderManager()->get($fixtureResourceLoaderConfig['name'], $fixtureResourceLoaderConfig['options']);
+            $fixtureResourceLoader->loadResourceForFixture($fixture);
+        }
+    }
+
+    /**
+     * Подготавливает данные необходимые для получения загрузчика ресурсов фикстуры
+     *
+     * @param mixed $fixtureResourceLoaderConfigData
+     *
+     * @throws \Nnx\DoctrineFixtureModule\ResourceLoader\Exception\InvalidFixtureResourceLoaderConfigException
+     *
+     * @return array
+     */
+    public function buildFixtureResourceLoaderConfig($fixtureResourceLoaderConfigData = null)
+    {
+        $fixtureResourceLoaderConfig = [];
+
+        if (!is_array($fixtureResourceLoaderConfigData)) {
+            $errMsg = 'Fixture resource loader config is not array';
+            throw new Exception\InvalidFixtureResourceLoaderConfigException($errMsg);
+        }
+
+        if (!array_key_exists('name', $fixtureResourceLoaderConfigData)) {
+            $errMsg = 'Resource loader name not defined';
+            throw new Exception\InvalidFixtureResourceLoaderConfigException($errMsg);
+        }
+        $fixtureResourceLoaderConfig['name'] = (string)$fixtureResourceLoaderConfigData['name'];
+
+        $fixtureResourceLoaderConfig['options'] = [];
+        if (array_key_exists('options', $fixtureResourceLoaderConfigData)) {
+            $fixtureResourceLoaderConfig['options'] = (array)$fixtureResourceLoaderConfigData['options'];
+        }
+
+        return $fixtureResourceLoaderConfig;
     }
 }

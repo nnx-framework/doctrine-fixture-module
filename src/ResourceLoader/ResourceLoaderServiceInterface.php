@@ -5,6 +5,8 @@
  */
 namespace Nnx\DoctrineFixtureModule\ResourceLoader;
 
+use Doctrine\Fixture\Fixture;
+
 /**
  * Interface ResourceLoaderServiceInterface
  *
@@ -12,4 +14,12 @@ namespace Nnx\DoctrineFixtureModule\ResourceLoader;
  */
 interface ResourceLoaderServiceInterface
 {
+    /**
+     * Загружает ресурсы для фикстуры
+     *
+     * @param Fixture $fixture
+     *
+     * @return mixed
+     */
+    public function loadResourceForFixture(Fixture $fixture);
 }

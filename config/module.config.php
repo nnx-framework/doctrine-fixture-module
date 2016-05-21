@@ -33,12 +33,19 @@ return [
 
         /**
          * Ключем является имя класса фикстуры, а значением, конфиг описыайющи загрузчик ресурсов
+         *
+         * Пример:
+         *
+         * MyFixtureClass::class => [
+         *      'name' => MyFixtureResourceLoader::class,
+         *      'options' => [
+         *          'key1' => 'value1'
+         *      ]
+         * ]
+         *
          */
         'resourceLoader'     => [
-            'fixtureName' => [
-                'name'    => 'resourceLoaderName',
-                'options' => []
-            ]
+
         ],
 
         /**

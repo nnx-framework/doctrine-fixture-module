@@ -154,7 +154,6 @@ return [
                 'fixturesLoader' => 'testInjectObjectManagerNameFixture',
             ]
 
-        ]
-
+        ],
     ]
 ];

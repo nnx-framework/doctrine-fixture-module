@@ -41,7 +41,7 @@
     "doctrine/doctrine-module": "~1.0.0",
     "doctrine/doctrine-orm-module": "~0.10.0",
 
-    "nnx/zf2-test-toolkit": "~0.1.4",
+    "nnx/zf2-test-toolkit": "~0.1.7",
 
     "zendframework/zend-config": "~2.4.0",
     "zendframework/zend-test": "~2.4.0",

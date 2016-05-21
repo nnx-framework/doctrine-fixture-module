@@ -6,6 +6,7 @@
 namespace Nnx\DoctrineFixtureModule\FixtureInitializer;
 
 use Doctrine\Fixture\Event\FixtureEvent;
+use Doctrine\Fixture\Fixture;
 use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderServiceInterface;
 
 
@@ -39,6 +40,8 @@ class ResourceLoaderInitializer extends AbstractContextInitializer
      */
     public function purge(FixtureEvent $event)
     {
+        $fixture = $event->getFixture();
+        $this->runResourceLoader($fixture);
     }
 
     /**
@@ -47,6 +50,18 @@ class ResourceLoaderInitializer extends AbstractContextInitializer
      */
     public function import(FixtureEvent $event)
     {
+        $fixture = $event->getFixture();
+        $this->runResourceLoader($fixture);
+    }
+
+    /**
+     * Загрузка ресуров для фикстуры
+     *
+     * @param Fixture $fixture
+     */
+    protected function runResourceLoader(Fixture $fixture)
+    {
+        $this->getResourceLoaderService()->loadResourceForFixture($fixture);
     }
 
     /**

@@ -12,6 +12,7 @@ use Doctrine\Fixture\Loader\ChainLoader;
 use Doctrine\Fixture\Filter\ChainFilter;
 use Doctrine\Fixture\Executor as FixtureExecutor;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\ResourceLoaderInitializer;
 
 /**
  * Class Executor
@@ -223,6 +224,10 @@ class Executor implements ExecutorInterface
             $initializers[] = $initializer;
             $eventManager->addEventSubscriber($initializer);
         }
+
+        $resourceLoaderInitializer = $fixtureInitializerManager->get(ResourceLoaderInitializer::class);
+        $initializers[] = $resourceLoaderInitializer;
+        $eventManager->addEventSubscriber($resourceLoaderInitializer);
 
         $this->getFixtureExecutor()->execute($loader, $filter, $method);
 
