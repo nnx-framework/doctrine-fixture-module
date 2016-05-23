@@ -10,3 +10,4 @@
 - [Компонент для запуска фикстур](fixture-executor.md)
 - [Настройка фикстур](fixture-configurations.md)
 - [Внедрение зависимостей в фикстуры](fixture-di.md)
+- [Загрузка ресурсов для фикстуры](resource-loader.md)

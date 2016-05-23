@@ -7,6 +7,7 @@ pages:
     - 'Компонент для запуска фикстур': 'fixture-executor.md'
     - 'Настройка фикстур': 'fixture-configurations.md'
     - 'Внедрение зависимостей в фикстуры': 'fixture-di.md'
+    - 'Загрузка ресурсов для фикстуры': 'resource-loader.md'
 site_name: DoctrineFixtureModule
 site_description: 'Работа с фикстурами Doctrine2'
 repo_url: 'https://github.com/nnx-framework/doctrine-fixture-module'
