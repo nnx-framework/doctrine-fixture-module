@@ -61,6 +61,16 @@ return [
     ],
     Module::CONFIG_KEY => [
         'fixturesLoaders' => [
+            'testSimpleFixture' => [
+                [
+                    'name' => ClassLoader::class,
+                    'options' => [
+                        'classList' => [
+                            TestModule1\SimpleFixture::class
+                        ]
+                    ]
+                ],
+            ],
             'testChainFixtureLoader' => [
                 [
                     'name' => ClassLoader::class,
@@ -138,6 +148,9 @@ return [
             ]
         ],
         'executors' => [
+            'testSimpleFixture' => [
+                'fixturesLoader' => 'testSimpleFixture'
+            ],
             'testExecutor' => [
                 'fixturesLoader' => 'testChainFixtureLoader',
                 'filter' => 'testChainFixtureFilter'

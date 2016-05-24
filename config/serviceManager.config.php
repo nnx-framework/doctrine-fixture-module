@@ -6,6 +6,8 @@
 namespace Nnx\DoctrineFixtureModule;
 
 use Nnx\DoctrineFixtureModule\Executor\DefaultExecutorConfigurationFactory;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\FixtureDataReaderManager;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\FixtureDataReaderManagerInterface;
 use Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface;
 use Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManager;
 use Nnx\DoctrineFixtureModule\Filter\FixtureFilterManagerInterface;
@@ -36,7 +38,8 @@ return [
             FixtureExecutorManagerInterface::class    => FixtureExecutorManager::class,
             ManagerRegistryProviderInterface::class   => ManagerRegistryProvider::class,
             FixtureInitializerManagerInterface::class => FixtureInitializerManager::class,
-            ResourceLoaderManagerInterface::class     => ResourceLoaderManager::class
+            ResourceLoaderManagerInterface::class     => ResourceLoaderManager::class,
+            FixtureDataReaderManagerInterface::class  => FixtureDataReaderManager::class
         ],
         'factories'          => [
             DefaultExecutorConfiguration::class      => DefaultExecutorConfigurationFactory::class,

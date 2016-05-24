@@ -1,0 +1,43 @@
+<fixtureSimpleDataContainer>
+    <item>
+        <field1>test_value_11</field1>
+        <field2>test_value_21</field2>
+    </item>
+    <item>
+        <field1>test_value_31</field1>
+        <field2>
+            <item>
+                <f1>val</f1>
+            </item>
+            <item>
+                <f1>val</f1>
+                <f2>val</f2>
+            </item>
+        </field2>
+        <field2>
+            <id>val</id>
+        </field2>
+    </item>
+    <item>
+        <field1>test_value_31</field1>
+        <field2>
+            <item>
+                <f1>val</f1>
+                <f2>val</f2>
+            </item>
+            <item>
+                <f1>val</f1>
+                <f2>val</f2>
+            </item>
+
+        </field2>
+        <field2>
+            <id>val</id>
+        </field2>
+    </item>
+    <item>
+        <field1>test_value_71</field1>
+        <field2>test_value_81</field2>
+    </item>
+</fixtureSimpleDataContainer>
+

@@ -9,6 +9,7 @@ use Nnx\DoctrineFixtureModule\FixtureInitializer\ConnectionRegistryEventSubscrib
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ManagerRegistryEventSubscriber;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ObjectManagerNameInitializer;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ResourceLoaderInitializer;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureDataReaderManageInitializer;
 
 return [
     Module::CONFIG_KEY => [
@@ -53,7 +54,8 @@ return [
          */
         'fixtureInitializer' => [
             ConnectionRegistryEventSubscriber::class => ConnectionRegistryEventSubscriber::class,
-            ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriber::class
+            ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriber::class,
+            FixtureDataReaderManageInitializer::class => FixtureDataReaderManageInitializer::class
         ],
 
         /**

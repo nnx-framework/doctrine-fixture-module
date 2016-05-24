@@ -17,18 +17,20 @@
   ],
   "require": {
     "php": ">=5.5.0",
+
     "nnx/module-options": "~0.1.0",
+
     "doctrine/data-fixtures": "~2.0.0@dev",
     "doctrine/common": "~2.5.0",
+
     "zendframework/zend-modulemanager": "~2.4.0",
     "zendframework/zend-mvc": "~2.4.0",
     "zendframework/zend-eventmanager": "~2.4.0",
     "zendframework/zend-stdlib": "~2.4.0",
     "zendframework/zend-servicemanager": "~2.4.0",
+    "zendframework/zend-view":  "~2.4.0",
 
-    "zendframework/zend-text":  "~2.4.0",
-    "zendframework/zend-version":  "~2.4.0",
-    "zendframework/zend-view":  "~2.4.0"
+    "symfony/finder": "~3.0.0"
   },
   "require-dev": {
     "fabpot/php-cs-fixer": "~1.11.0",
@@ -48,7 +50,10 @@
     "zendframework/zend-loader": "~2.4.0",
     "zendframework/zend-serializer": "~2.4.0",
     "zendframework/zend-log": "~2.4.0",
-    "zendframework/zend-i18n": "~2.4.0"
+    "zendframework/zend-i18n": "~2.4.0",
+    "zendframework/zend-text":  "~2.4.0",
+    "zendframework/zend-version":  "~2.4.0"
+
   },
   "suggest": {
     "nnx/doctrine": "Use to create a ManagerRegistry",
