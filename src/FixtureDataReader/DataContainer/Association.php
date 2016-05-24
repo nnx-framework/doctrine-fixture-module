@@ -27,6 +27,23 @@ class Association
     protected $entities;
 
     /**
+     * Хранилище индексов
+     *
+     * @var Index
+     */
+    protected $index;
+
+    /**
+     * Association constructor.
+     *
+     * @param Index $index
+     */
+    public function __construct(Index $index)
+    {
+        $this->index = $index;
+    }
+
+    /**
      * Устанавливает имя ассоциаци
      *
      * @return string
@@ -53,13 +70,14 @@ class Association
     /**
      * Добавляет контейнер с данными о вложенной сущности
      *
-     * @param Entity $entityContainer
+     * @param Entity $entity
      *
      * @return $this
      */
-    public function EntityContainer(Entity $entityContainer)
+    public function addEntity(Entity $entity)
     {
-        $this->entities[] = $entityContainer;
+        $this->index->indexEntity($entity);
+        $this->entities[] = $entity;
 
         return $this;
     }

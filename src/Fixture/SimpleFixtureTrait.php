@@ -221,6 +221,7 @@ trait SimpleFixtureTrait
             $dataContainer = $fixtureDataReader->loadDataFromResource($file->getRealPath());
 
 
+            return;
 //            if (Executor::IMPORT === $method) {
 //
 //            } elseif (Executor::PURGE === $method) {

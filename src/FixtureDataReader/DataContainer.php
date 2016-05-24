@@ -6,6 +6,7 @@
 namespace Nnx\DoctrineFixtureModule\FixtureDataReader;
 
 use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Entity;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Index;
 
 /**
  * Class DataContainer
@@ -20,6 +21,23 @@ class DataContainer implements DataContainerInterface
     protected $entities = [];
 
     /**
+     * Хранилище индексов
+     *
+     * @var Index
+     */
+    protected $index;
+
+    /**
+     * DataContainer constructor.
+     *
+     * @param Index $index
+     */
+    public function __construct(Index $index)
+    {
+        $this->index = $index;
+    }
+
+    /**
      * Добавляет информацию о данных для сущности
      *
      * @param Entity $entity
@@ -28,6 +46,7 @@ class DataContainer implements DataContainerInterface
      */
     public function addEntity(Entity $entity)
     {
+        $this->index->indexEntity($entity);
         $this->entities[] = $entity;
 
         return $this;

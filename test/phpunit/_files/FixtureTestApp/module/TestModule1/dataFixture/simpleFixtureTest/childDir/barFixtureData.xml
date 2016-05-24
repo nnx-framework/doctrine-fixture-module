@@ -1,4 +1,4 @@
-<fixtureSimpleDataContainer>
+<items>
     <item>
         <field1>test_value_11</field1>
         <field2>test_value_21</field2>
@@ -14,9 +14,9 @@
                 <f2>val</f2>
             </item>
         </field2>
-        <field2>
+        <field3>
             <id>val</id>
-        </field2>
+        </field3>
     </item>
     <item>
         <field1>test_value_31</field1>
@@ -29,15 +29,19 @@
                 <f1>val</f1>
                 <f2>val</f2>
             </item>
+            <item>
+                <f1>val</f1>
+                <f2>val</f2>
+            </item>
 
         </field2>
-        <field2>
+        <field3>
             <id>val</id>
-        </field2>
+        </field3>
     </item>
     <item>
         <field1>test_value_71</field1>
         <field2>test_value_81</field2>
     </item>
-</fixtureSimpleDataContainer>
+</items>
 

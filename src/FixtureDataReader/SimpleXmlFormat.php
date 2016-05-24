@@ -7,6 +7,11 @@ namespace Nnx\DoctrineFixtureModule\FixtureDataReader;
 
 use DOMDocument;
 use DOMXPath;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Entity;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\SimpleXmlFormat\ParserContext;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Association;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Property;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Index;
 
 /**
  * Class SimpleXmlFormat
@@ -16,6 +21,12 @@ use DOMXPath;
 class SimpleXmlFormat implements FixtureDataReaderInterface
 {
 
+    /**
+     * Имя тега, который описывает данные для сущности
+     *
+     * @var string
+     */
+    const ITEM = 'item';
 
     /**
      * Загружает данные для фикстуры, на основе заданного ресурса
@@ -23,8 +34,10 @@ class SimpleXmlFormat implements FixtureDataReaderInterface
      * @param $resource
      *
      * @return DataContainerInterface
-     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\Exception\RuntimeException
      * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\Exception\InvalidResourceException
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\SimpleXmlFormat\Exception\InvalidParserContextException
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\Exception\RuntimeException
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Exception\InvalidArgumentException
      */
     public function loadDataFromResource($resource)
     {
@@ -45,21 +58,109 @@ class SimpleXmlFormat implements FixtureDataReaderInterface
         }
 
         $xpath = new DOMXPath($xmlDoc);
-        $itemEntries = $xpath->query('/fixtureSimpleDataContainer/item');
+        $itemNodes = $xpath->query('/items/item');
 
-        $results = [];
-        for ($itemIndex = 0; $itemIndex < $itemEntries->length; $itemIndex++) {
-            $itemNode = $itemEntries->item($itemIndex);
-            $itemElements = $xpath->query('./*', $itemNode);
-            for ($elementIndex = 0; $elementIndex < $itemElements->length; $elementIndex++) {
-                $element = $itemElements->item($itemIndex);
+        $index = new Index();
+        $dataContainer = new DataContainer($index);
 
-                $elementName = $element->nodeName;
-                $elementValue = $element->nodeValue;
+        $context = new ParserContext();
+        $context
+            ->setXpath($xpath)
+            ->setIndex($index)
+            ->setItemNodes($itemNodes)
+            ->setDataContainer($dataContainer);
+
+        $this->parseItem($context);
+
+        return $dataContainer;
+    }
 
 
-                if (!array_key_exists($elementName, $results)) {
-                    $results[$elementName] = [];
+    /**
+     * Обработка набора узлов xml документа, в которых описываются данные для сущности
+     *
+     * @param ParserContext $context
+     *
+     * @return DataContainerInterface
+     *
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\Exception\RuntimeException
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\SimpleXmlFormat\Exception\InvalidParserContextException
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Exception\InvalidArgumentException
+     */
+    protected function parseItem(ParserContext $context)
+    {
+        $context->validate();
+
+        $itemNodes = $context->getItemNodes();
+        $level = $context->getLevel();
+        $parentEntity = $context->getParentEntity();
+        $xpath = $context->getXpath();
+        $parentAssociationName = $context->getParentAssociation();
+        $dataContainer = $context->getDataContainer();
+        $index = $context->getIndex();
+
+
+        for ($itemIndex = 0; $itemIndex < $itemNodes->length; $itemIndex++) {
+            $itemNode = $itemNodes->item($itemIndex);
+
+            if (static::ITEM !== $itemNode->nodeName) {
+                $errMsg = sprintf('Invalid tag %s in fixture xml', $itemNode->nodeName);
+                throw new Exception\RuntimeException($errMsg);
+            }
+
+            $entity = new Entity();
+            $entity->setLevel($level);
+            if (null !== $parentEntity) {
+                $entity->setParentEntity($parentEntity);
+
+                if (!$parentEntity->hasAssociation($parentAssociationName)) {
+                    $association = new Association($index);
+                    $association->setName($parentAssociationName);
+                    $parentEntity->addAssociation($association);
+                } else {
+                    $association = $parentEntity->getAssociation($parentAssociationName);
+                }
+                $association->addEntity($entity);
+            } else {
+                $dataContainer->addEntity($entity);
+            }
+
+            $properties = $xpath->query('./*', $itemNode);
+
+            $existingProperties = [];
+            for ($propertyIndex = 0; $propertyIndex < $properties->length; $propertyIndex++) {
+                $property = $properties->item($propertyIndex);
+                $childItems = $xpath->query('./item', $property);
+                $propertyName = $property->nodeName;
+
+                if (array_key_exists($propertyName, $existingProperties)) {
+                    $errMsg = sprintf('Property %s already exists', $propertyName);
+                    throw new Exception\RuntimeException($errMsg);
+                }
+                $existingProperties[$propertyName] = $propertyName;
+
+
+                if ($childItems->length > 0) {
+                    $childLevel = $level + 1;
+                    $newContext = new ParserContext();
+                    $newContext
+                        ->setXpath($context->getXpath())
+                        ->setItemNodes($childItems)
+                        ->setParentEntity($entity)
+                        ->setLevel($childLevel)
+                        ->setParentAssociation($propertyName)
+                        ->setDataContainer($context->getDataContainer())
+                        ->setIndex($context->getIndex());
+
+                    $this->parseItem($newContext);
+                } else {
+                    $propertyValue = $property->nodeValue;
+                    $property = new Property();
+                    $property
+                        ->setName($propertyName)
+                        ->setValue($propertyValue)
+                    ;
+                    $entity->addProperty($property);
                 }
             }
         }

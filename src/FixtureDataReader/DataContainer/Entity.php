@@ -17,7 +17,7 @@ class Entity
      *
      * @var integer
      */
-    protected $entityLevel;
+    protected $level;
 
     /**
      * Свойства сущности
@@ -45,21 +45,21 @@ class Entity
      *
      * @return int
      */
-    public function getEntityLevel()
+    public function getLevel()
     {
-        return $this->entityLevel;
+        return $this->level;
     }
 
     /**
      * Устанавливает уровень на котором расположена сущность
      *
-     * @param int $entityLevel
+     * @param int $level
      *
      * @return $this
      */
-    public function setEntityLevel($entityLevel)
+    public function setLevel($level)
     {
-        $this->entityLevel = $entityLevel;
+        $this->level = $level;
 
         return $this;
     }
@@ -134,5 +134,36 @@ class Entity
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Определяет, есть ли связь, с заданным именем
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public function hasAssociation($name)
+    {
+        return array_key_exists($name, $this->associations);
+    }
+
+
+    /**
+     * Определяет, есть ли связь, с заданным именем
+     *
+     * @param $name
+     *
+     * @return bool
+     * @throws \Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Exception\InvalidArgumentException
+     */
+    public function getAssociation($name)
+    {
+        if (!array_key_exists($name, $this->associations)) {
+            $errMsg = sprintf('Association %s not found', $name);
+            throw new Exception\InvalidArgumentException($errMsg);
+        }
+
+        return $this->associations[$name];
     }
 }

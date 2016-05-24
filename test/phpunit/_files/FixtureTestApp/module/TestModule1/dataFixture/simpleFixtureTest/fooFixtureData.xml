@@ -1,5 +1,5 @@
 
-<fixtureSimpleDataContainer>
+<items>
     <item>
         <field1>test_value_1</field1>
         <field2>test_value_2</field2>
@@ -16,6 +16,6 @@
         <field1>test_value_7</field1>
         <field2>test_value_8</field2>
     </item>
-</fixtureSimpleDataContainer>
+</items>
 
 
