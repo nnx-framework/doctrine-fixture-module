@@ -1,8 +1,8 @@
 # Загрузчики фикстур
 
-Загрузчик фикстур - класс имплементирующий \Doctrine\Fixture\Loader\Loader , позволяющий загрузить одну или несколько фикстур.
+Загрузчик фикстур – класс, имплементирующий \Doctrine\Fixture\Loader\Loader, позволяющий загрузить одну или несколько фикстур.
 
-Для работы с загрузчиками фикстур используется специальный менеджер плагинов - \Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface.
+Для работы с загрузчиками фикстур используется специальный менеджер плагинов \Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface.
 Пример получения загрузчика фикстур в фабрике:
 
 ```php
@@ -33,7 +33,6 @@ class ExecutorFactory implements FactoryInterface
 
 ```
 
-
 Модуль [doctrine/data-fixtures](https://github.com/doctrine/data-fixtures) предоставляет следующие загрузчики фикстур:
 
 Загрузчик                                        |Описание
@@ -41,7 +40,7 @@ class ExecutorFactory implements FactoryInterface
 \Doctrine\Fixture\Loader\ChainLoader             |Позволяет объединить загрузчики фикстур в цепочку
 \Doctrine\Fixture\Loader\ClassLoader             |Загрузка списка классов фикстур
 \Doctrine\Fixture\Loader\DirectoryLoader         |Загружает все фикстуры из заданной директории
-\Doctrine\Fixture\Loader\GlobLoader              |Загружает все фикстуры из заданной директории, в качестве средства получения файлов из директории используется \GlobIterator
+\Doctrine\Fixture\Loader\GlobLoader              |Загружает все фикстуры из заданной директории в качестве средства получения файлов из директории используется \GlobIterator
 \Doctrine\Fixture\Loader\RecursiveDirectoryLoader|Загружает все фикстуры из заданной директории, используя рекурсивный обход вложенных каталогов
 
 Каждый из этих загрузчиков фикстур зарегестрирован в менеджере плагинов \Nnx\DoctrineFixtureModule\Loader\FixtureLoaderManagerInterface.
@@ -75,11 +74,11 @@ $fixtures = $loaderManager->get(\Doctrine\Fixture\Loader\ChainLoader::class, $op
 
 ```
 
-При создание экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\ChainLoader через плагин менеджер, в опциях с 
-помощью параметра loaderList, можно указать массив объектов загрузчиков фикстур.
+При создании экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\ChainLoader через плагин-менеджер в опциях с 
+помощью параметра loaderList можно указать массив объектов-загрузчиков фикстур.
 
-После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\ChainLoader, будут загружены все фикстуры из 
-загрузчиков, образующих цепочку
+После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\ChainLoader будут загружены все фикстуры из 
+загрузчиков, образующих цепочку.
 
 
 ## Загрузчик \Doctrine\Fixture\Loader\ClassLoader
@@ -102,15 +101,15 @@ $options = [
 $fixtures = $loaderManager->get(\Doctrine\Fixture\Loader\ClassLoader::class, $options)->load();
 
 ```
-При создание экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\ClassLoader через плагин менеджер, в опциях с 
-помощью параметра classList, можно указать массив с именами классов фикстур.
+При создании экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\ClassLoader через плагин-менеджер в опциях с 
+помощью параметра classList можно указать массив с именами классов фикстур.
 
-После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\ClassLoader, будут загружены все фикстуры перечисленные в 
+После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\ClassLoader будут загружены все фикстуры, перечисленные в 
 classList.
 
 ## Загрузчик \Doctrine\Fixture\Loader\DirectoryLoader
  
-Позволяет загрузить фикстуры из заданной директории
+Позволяет загрузить фикстуры из заданной директории.
 
 Пример использования:
 
@@ -126,15 +125,15 @@ $fixtures = $loaderManager->get(\Doctrine\Fixture\Loader\DirectoryLoader::class,
 
 ```
 
-При создание экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\DirectoryLoader через плагин менеджер, в опциях с 
-помощью параметра directory, указывается директория, в которой располагаются  файлы с фикстурами.
+При создании экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\DirectoryLoader через плагин-менеджер в опциях с 
+помощью параметра directory указывается директория, в которой располагаются файлы с фикстурами.
 
-После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\DirectoryLoader, будут загружены все фикстуры найденные в 
-файлах расположенных в директории указанной в параметре directory.
+После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\DirectoryLoader будут загружены все фикстуры, найденные в тех
+файлах, которые расположены в директории из параметра directory.
 
 ## Загрузчик \Doctrine\Fixture\Loader\GlobLoader
 
-Позволяет загрузить фикстуры из заданной директории. Загрузка производится с помощью GlobIterator 
+Позволяет загрузить фикстуры из заданной директории. Загрузка производится с помощью GlobIterator. 
 
 Пример использования:
 
@@ -150,16 +149,15 @@ $fixtures = $loaderManager->get(\Doctrine\Fixture\Loader\DirectoryLoader::class,
 
 ```
 
-При создание экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\DirectoryLoader через плагин менеджер, в опциях с 
-помощью параметра directory, указывается директория, в которой располагаются  файлы с фикстурами.
+При создании экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\DirectoryLoader через плагин-менеджер в опциях с 
+помощью параметра directory указывается директория, в которой располагаются файлы с фикстурами.
 
-После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\DirectoryLoader, будут загружены все фикстуры найденные в 
-файлах расположенных в директории указанной в параметре directory.
+После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\DirectoryLoader будут загружены все фикстуры, найденные в тех
+файлах, которые расположены в директории из параметра directory.
 
 ## Загрузчик \Doctrine\Fixture\Loader\RecursiveDirectoryLoader
 
-Позволяет загрузить фикстуры из заданной директории. При этом рекурсивно обходятся вложенные каталоги. Загрузка происходит
- с помощью RecursiveDirectoryIterator
+Позволяет загрузить фикстуры из заданной директории. При этом рекурсивно обходятся вложенные каталоги. Загрузка происходит с помощью RecursiveDirectoryIterator
 
 Пример использования:
 
@@ -175,20 +173,18 @@ $fixtures = $loaderManager->get(\Doctrine\Fixture\Loader\RecursiveDirectoryLoade
 
 ```
 
-При создание экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\RecursiveDirectoryLoader через плагин менеджер, в опциях с 
-помощью параметра directory, указывается директория, в которой располагаются  файлы с фикстурами.
+При создании экземпляра загрузчика фикстур \Doctrine\Fixture\Loader\RecursiveDirectoryLoader через плагин-менеджер в опциях с 
+помощью параметра directory указывается директория, в которой располагаются файлы с фикстурами.
 
-После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\RecursiveDirectoryLoader, будут загружены все фикстуры найденные в 
-файлах и вложенных подкаталогах в директории указанной в параметре directory.
-
+После вызова метода load у экземпляра объекта \Doctrine\Fixture\Loader\RecursiveDirectoryLoader будут загружены все фикстуры найденные в файлах и вложенных подкаталогах в директории, указанной в параметре directory.
 
 ## Создание загрузчиков с помощью конфигов приложения
 
-Для упрощения работы с загрузчиками, их можно описать в конфиге приложения.
+Для упрощения работы с загрузчиками их можно описать в конфиге приложения.
 
 В секции nnx_doctrine_fixture_module в разделе fixturesLoaders описываются используемые загрузчики фикстур. 
-В качестве ключа в fixturesLoaders указывается условное имя для загрузчика, а в качестве значения массив, каждый элемент
-которого описывает отдельный загрузчик фикстур. Для каждого элемента в разделе fixturesLoaders, создается загрузчик
+В качестве ключа в fixturesLoaders указывается условное имя для загрузчика, а в качестве значения – массив, каждый элемент
+которого описывает отдельный загрузчик фикстур. Для каждого элемента в разделе fixturesLoaders создается загрузчик
 \Doctrine\Fixture\Loader\ChainLoader и в него добавляются все описанные элементы.
 
 ```php
@@ -230,11 +226,11 @@ return [
 
 ```
 
-В приведенном выше примере, создается загрузчик фикстур 'test'. Это загрузчик \Doctrine\Fixture\Loader\ChainLoader.
-В него добавляются два загрузчика фикстур Doctrine\Fixture\Loader\ClassLoader. Имена kladr и okpd, произвольные. Эти имена
-не являются обязательными, и служат лишь для того, что бы оставить возможность перенастроить фикстуры в другом модуле.
+В приведенном выше примере создается загрузчик фикстур 'test'. Это загрузчик \Doctrine\Fixture\Loader\ChainLoader.
+В него добавляются два загрузчика фикстур Doctrine\Fixture\Loader\ClassLoader. Имена kladr и okpd – произвольные. Эти имена
+не являются обязательными и служат лишь для того, чтобы оставить возможность перенастроить фикстуры в другом модуле.
 
-Также можно указывать имена фикстур зарегестрированных в секции fixturesLoaders. Например:
+Также можно указывать имена фикстур, зарегестрированных в секции fixturesLoaders. Например:
 
 
 ```php
@@ -283,5 +279,3 @@ return [
 ];
 
 ```
-
-
