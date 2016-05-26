@@ -1,16 +1,16 @@
 # Внедрение зависимостей в фикстуры
 
-Класс является фикстурой, если он реализует интерфейс \Doctrine\Fixture\Fixture. В интерфейсе определены, два
-метода import и purge. При использовании фикстур в реальных условиях, зачастую возникает потребность, использовать 
-различные компоненты из приложения. Например, в фикстурах может потребоваться ObjectManager Doctrine2, или сервис для 
-загрузки данных из xml формата. Далее будут описываться способ внедрения зависимостей в фикстуры.
+Класс является фикстурой, если он реализует интерфейс \Doctrine\Fixture\Fixture. В интерфейсе определены два
+метода: import и purge. При использовании фикстур в реальных условиях зачастую возникает потребность использовать 
+различные компоненты из приложения. Например, в фикстурах может потребоваться ObjectManager Doctrine2 или сервис для 
+загрузки данных из XML-формата. Далее будет описываться способ внедрения зависимостей в фикстуры.
 
 # Внедрение зависимостей через FixtureInitializer
 
 ## Быстрый старт
 
-- Создать Aware интерфейс. Если фикстура реализует данный интерфейс, то значит в нее требуется внедрить зависимость
-    - Aware интерфейс, должен определять setter'ы, позволяющие передать зависимость
+- Создать Aware-интерфейс. Если фикстура реализует данный интерфейс, то значит, что в нее требуется внедрить зависимость:
+    - Aware-интерфейс должен определять setter'ы, позволяющие передать зависимость.
     
 ```php
 
@@ -21,12 +21,12 @@ interface DependencyServiceAwareInterface
 
 ```
 
-- Создать FixtureInitializer
-    - Создать класс реализующий интерфейс Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface
-    - В качестве аргументов constructor указать сервисы которые необходимо внедрить в фикстуру
-    - В классе реализовать метод getSubscribedEvents, возвращающий массив с двумя значениями "import" и "purge"
-    - Реализовать в классе два метода import и purge
-    - В методах import и purge проверяется, что если фикстура реализует заданный Aware интерфейс, то в нее устанавливается требуемая зависимость
+- Создать FixtureInitializer:
+    - Создать класс, реализующий интерфейс Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface;
+    - В качестве аргументов конструктора указать сервисы, которые необходимо внедрить в фикстуру;
+    - В классе реализовать метод getSubscribedEvents, возвращающий массив с двумя значениями: "import" и "purge";
+    - Реализовать в классе два метода: import и purge;
+    - В методах import и purge проверяется, что если фикстура реализует заданный Aware-интерфейс, то в нее устанавливается требуемая зависимость.
     
 ```php
 
@@ -86,10 +86,10 @@ class MyFixtureInitializer implements
 }
 ```
 
-- Создать фабрику для FixtureInitializer
-    - Создать стандартную фабрику (реализует интерфейс \Zend\ServiceManager\FactoryInterface )
-    - Из ServiceLocator (необходимо помнить что serviceLocator в фабриках используемых для менеджеров плагинов, является самим менеджером плагинов), получить необходимые зависимости
-    - Создать FixtureInitializer и передать в конструктор необходимые зависимости
+- Создать фабрику для FixtureInitializer:
+    - Создать стандартную фабрику, которая реализует интерфейс \Zend\ServiceManager\FactoryInterface;
+    - Из ServiceLocator получить необходимые зависимости. Необходимо помнить что ServiceLocator в фабриках, используемых для менеджеров плагинов, является самим менеджером плагинов;
+    - Создать FixtureInitializer и передать в конструктор необходимые зависимости.
 
 ```php
 
@@ -115,7 +115,7 @@ class MyFixtureInitializerFactory implements FactoryInterface
 
 ```
 
-- Зарегестрировать FixtureInitializer в менеджере плагинов \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface
+- Зарегестрировать FixtureInitializer в менеджере плагинов \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface:
     - В секцию ['nnx_fixture_initializer']['factories'] конфигурационных файлов  приложения, добавить созданный FixtureInitializer
     
 ```php 
@@ -148,21 +148,21 @@ return [
 
 ## Описание FixtureInitializer
 
-Для внедрения зависимостей используется модификация паттерна "Method Injection", а именно "Interface Injection".
-Непосредственно после создания фикстуры, запускаются FixtureInitializer. 
+Для внедрения зависимостей используется модификация паттерна "Method Injection", а именно – "Interface Injection".
+Непосредственно после создания фикстуры запускаются FixtureInitializer. 
 
-FixtureInitializer это класс реализующий \Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface.
-Интерфейс \Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface, расширяет \Doctrine\Common\EventSubscriber.
+FixtureInitializer – это класс, реализующий \Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface.
+Интерфейс \Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerInterface расширяет \Doctrine\Common\EventSubscriber.
 
-Таким образом в классе FixtureInitializer, необходимо реализовать метод getSubscribedEvents, в котором нужно вернуть, 
+Таким образом, в классе FixtureInitializer необходимо реализовать метод getSubscribedEvents, в котором нужно вернуть 
 массив с именами событий, на которые подписываемся. 
 
-Для реализации FixtureInitializer, необходимо подписаться на два события 
+Для реализации FixtureInitializer необходимо подписаться на два события:
 
-- import - событие бросаемое, когда происходит запуск процесса импорта
-- purge - событие бросаемое, когда происходит запуск процесса удаления данных
+- import - событие, бросаемое при запуске процесса импорта;
+- purge - событие, бросаемое, при запуске процесса удаления данных.
 
-Пример FixtureInitializer
+Пример FixtureInitializer:
 
 ```php
 
@@ -222,17 +222,15 @@ class MyFixtureInitializer implements
 }
 
 
-
 ```
 
-В фикстуре необходимо реализовать два метода import и purge. В методах обычно происходит проверка, того что фикстура, 
-реализует заданный интерфейс. В случае если фикстура, интерфейс реализует, то происходит внедрение соответствующей зависимости
-в фиктсуру.
+В фикстуре необходимо реализовать два метода: import и purge. В методах обычно происходит проверка того, что фикстура реализует заданный интерфейс. В случае если фикстура интерфейс реализует, то происходит внедрение соответствующей зависимости
+в фикстуру.
 
 ## Регистрация FixtureInitializer
 
 Для работы с FixtureInitializer используется специальный менеджер плагинов \Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManagerInterface.
-Для регистрации FixtureInitializer в менеджере плагинов, необходимо добавить соответствующий плагин в секцию nnx_fixture_initializer.
+Для регистрации FixtureInitializer в менеджере плагинов необходимо добавить соответствующий плагин в секцию nnx_fixture_initializer.
 
 ```php
 
@@ -257,16 +255,16 @@ return [
 
 FixtureInitializer бывают двух типов:
 
-- Initializer для контекста - такие FixtureInitializer, создаются и подписываются на события import и purge, в качестве аргумента, передаются данные переданные в аргументах import и purge , объекта имплементирующего \Nnx\DoctrineFixtureModule\Executor\ExecutorInterface
-- Статические Initializer - такие FixtureInitializer, не создаются каждый раз заново, также они подписываются единожды на события import и purge всех FixtureInitializer
+- Initializer для контекста. Такие FixtureInitializer создаются и подписываются на события import и purge. В качестве аргумента передаются данные, переданные в аргументах import и purge объекта имплементирующего, \Nnx\DoctrineFixtureModule\Executor\ExecutorInterface
+- Статические Initializer. Такие FixtureInitializer не создаются каждый раз заново, также они подписываются единожды на события import и purge всех FixtureInitializer
 
 ### Добавление Initializer для контекста
 
-Для добавления Initializer для контекста, необходимо в секции ['nnx_doctrine_fixture_module']['contextInitializer'] добавить
+Для добавления Initializer для контекста необходимо в секции ['nnx_doctrine_fixture_module']['contextInitializer'] добавить
 имя Initializera'a (по этому имени он будет получен из \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface)
 
 
 ### Добавление статического Initializer
 
-Для добавления Initializer для контекста, необходимо в секции ['nnx_doctrine_fixture_module']['fixtureInitializer'] добавить
+Для добавления Initializer для контекста необходимо в секции ['nnx_doctrine_fixture_module']['fixtureInitializer'] добавить
 имя Initializera'a (по этому имени он будет получен из \Nnx\DoctrineFixtureModule\Executor\FixtureExecutorManagerInterface)
