@@ -20,13 +20,14 @@ return [
             FixtureInitializer\ObjectManagerNameInitializer::class       => FixtureInitializer\ObjectManagerNameInitializerFactory::class,
             FixtureInitializer\ResourceLoaderInitializer::class          => FixtureInitializer\ResourceLoaderInitializerFactory::class,
             FixtureInitializer\FixtureDataReaderManageInitializer::class => FixtureInitializer\FixtureDataReaderManageInitializerFactory::class,
+            FixtureInitializer\SimpleFixtureInitializer::class           => FixtureInitializer\SimpleFixtureInitializerFactory::class,
         ],
         'abstract_factories' => [
 
         ],
         'shared'             => [
             FixtureInitializer\ConnectionRegistryEventSubscriber::class => true,
-            FixtureInitializer\ManagerRegistryEventSubscriber::class    => true,
+            FixtureInitializer\ManagerRegistryEventSubscriber::class    => true
         ]
     ],
 ];

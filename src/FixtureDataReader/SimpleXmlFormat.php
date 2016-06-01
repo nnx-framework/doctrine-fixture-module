@@ -49,6 +49,7 @@ class SimpleXmlFormat implements FixtureDataReaderInterface
             throw new Exception\InvalidResourceException($errMsg);
         }
         libxml_use_internal_errors(true);
+        libxml_clear_errors();
         $xmlDoc = new DOMDocument();
         $filename = realpath($resource);
         $xmlDoc->load($filename, LIBXML_COMPACT | LIBXML_NOBLANKS);
@@ -102,11 +103,6 @@ class SimpleXmlFormat implements FixtureDataReaderInterface
 
         for ($itemIndex = 0; $itemIndex < $itemNodes->length; $itemIndex++) {
             $itemNode = $itemNodes->item($itemIndex);
-
-            if (static::ITEM !== $itemNode->nodeName) {
-                $errMsg = sprintf('Invalid tag %s in fixture xml', $itemNode->nodeName);
-                throw new Exception\RuntimeException($errMsg);
-            }
 
             $entity = new Entity();
             $entity->setLevel($level);

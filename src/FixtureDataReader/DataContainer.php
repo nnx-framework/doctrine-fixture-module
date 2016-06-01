@@ -61,4 +61,14 @@ class DataContainer implements DataContainerInterface
     {
         return $this->entities;
     }
+
+    /**
+     * Возвращает хранилище индексов
+     *
+     * @return Index
+     */
+    public function getIndex()
+    {
+        return $this->index;
+    }
 }

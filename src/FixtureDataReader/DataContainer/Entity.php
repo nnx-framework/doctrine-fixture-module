@@ -13,6 +13,20 @@ namespace Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer;
 class Entity
 {
     /**
+     * Внутренний идендификатор контейнера с данынми для фикстуры
+     *
+     * @var integer
+     */
+    protected $id;
+
+    /**
+     * Поле используемое для генерации id
+     *
+     * @var int
+     */
+    protected static $idGenerator = 0;
+
+    /**
      * Уровень на котором расположенна сущность
      *
      * @var integer
@@ -165,5 +179,19 @@ class Entity
         }
 
         return $this->associations[$name];
+    }
+
+    /**
+     * Возвращает внутренний идендификатор контейнера с данынми для фикстуры
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        if (null === $this->id) {
+            static::$idGenerator += 1;
+            $this->id = static::$idGenerator;
+        }
+        return $this->id;
     }
 }

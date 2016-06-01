@@ -3,7 +3,8 @@
  * @link    https://github.com/nnx-framework/doctrine-fixture-module
  * @author  Malofeykin Andrey  <and-rey2@yandex.ru>
  */
-namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule\Entity;
+namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule1\Entity;
+
 
 /**
  * Class TestEntity
@@ -11,9 +12,9 @@ namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule\E
  * @package Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule\Entity
  *
  * @Doctrine\ORM\Mapping\Entity()
- * @Doctrine\ORM\Mapping\Table(name="doctrine_fixture_module_simple_fixture")
+ * @Doctrine\ORM\Mapping\Table(name="dfm_test_address")
  */
-class TestEntity
+class Address
 {
 
     /**
@@ -28,19 +29,18 @@ class TestEntity
     protected $id;
 
     /**
-     * @Doctrine\ORM\Mapping\Column(name="field_1", type="string")
+     * @Doctrine\ORM\Mapping\Column(name="city", type="string")
      *
      * @var string
      */
-    protected $field1;
-
+    protected $city;
 
     /**
-     * @Doctrine\ORM\Mapping\Column(name="field_2", type="string")
+     * @Doctrine\ORM\Mapping\Column(name="street", type="string")
      *
      * @var string
      */
-    protected $field2;
+    protected $street;
 
     /**
      *
@@ -65,45 +65,49 @@ class TestEntity
     }
 
     /**
+     * Устанавливает название города
      *
      * @return string
      */
-    public function getField1()
+    public function getCity()
     {
-        return $this->field1;
+        return $this->city;
     }
 
     /**
+     * Возращает название города
      *
-     * @param string $field1
+     * @param string $city
      *
      * @return $this
      */
-    public function setField1($field1)
+    public function setCity($city)
     {
-        $this->field1 = $field1;
+        $this->city = $city;
 
         return $this;
     }
 
     /**
+     * Возвращает название улицы
      *
      * @return string
      */
-    public function getField2()
+    public function getStreet()
     {
-        return $this->field2;
+        return $this->street;
     }
 
     /**
+     * Устанавливает возвращает название улицы
      *
-     * @param string $field2
+     * @param string $street
      *
      * @return $this
      */
-    public function setField2($field2)
+    public function setStreet($street)
     {
-        $this->field2 = $field2;
+        $this->street = $street;
 
         return $this;
     }

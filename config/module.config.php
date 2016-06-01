@@ -10,25 +10,27 @@ use Nnx\DoctrineFixtureModule\FixtureInitializer\ManagerRegistryEventSubscriber;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ObjectManagerNameInitializer;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\ResourceLoaderInitializer;
 use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureDataReaderManageInitializer;
+use Nnx\DoctrineFixtureModule\FixtureInitializer\SimpleFixtureInitializer;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\EntityLocator;
 
 return [
     Module::CONFIG_KEY => [
         /**
          * В данной секции описываются загрузчкики фикстур
          */
-        'fixturesLoaders' => [
+        'fixturesLoaders'                     => [
 
         ],
         /**
          * Описание фильтров фикстур
          */
-        'filters'         => [
+        'filters'                             => [
 
         ],
         /**
          * Описание компонентов отвечающих за запуск фикстур
          */
-        'executors'       => [
+        'executors'                           => [
 
         ],
 
@@ -45,16 +47,16 @@ return [
          * ]
          *
          */
-        'resourceLoader'     => [
+        'resourceLoader'                      => [
 
         ],
 
         /**
          * Описание инициалайзеров (используются для внедрения зависимостей), которые загружаются для каждого Executor'a
          */
-        'fixtureInitializer' => [
-            ConnectionRegistryEventSubscriber::class => ConnectionRegistryEventSubscriber::class,
-            ManagerRegistryEventSubscriber::class    => ManagerRegistryEventSubscriber::class,
+        'fixtureInitializer'                  => [
+            ConnectionRegistryEventSubscriber::class  => ConnectionRegistryEventSubscriber::class,
+            ManagerRegistryEventSubscriber::class     => ManagerRegistryEventSubscriber::class,
             FixtureDataReaderManageInitializer::class => FixtureDataReaderManageInitializer::class
         ],
 
@@ -62,10 +64,16 @@ return [
          * Инициалайзеры, создаваемые заново перед каждым запуском фикстур. При создание этих инициайзеров, им передаются
          * данные контекста
          */
-        'contextInitializer' => [
+        'contextInitializer'                  => [
             ObjectManagerNameInitializer::class => ObjectManagerNameInitializer::class,
-            ResourceLoaderInitializer::class    => ResourceLoaderInitializer::class
-        ]
+            ResourceLoaderInitializer::class    => ResourceLoaderInitializer::class,
+            SimpleFixtureInitializer::class     => SimpleFixtureInitializer::class
+        ],
+
+        /**
+         * Локатор используемый для создания новых сущностей в SimpleFixture
+         */
+        'simpleFixtureEntityLocator' => EntityLocator::class
     ]
 ];
 

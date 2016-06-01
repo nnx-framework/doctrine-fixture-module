@@ -6,6 +6,7 @@
 namespace Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule1;
 
 use Nnx\DoctrineFixtureModule\Fixture\AbstractSimpleFixture;
+use Nnx\DoctrineFixtureModule\PhpUnit\TestData\FixtureTestApp\TestModule1\Entity\Book;
 
 /**
  * Class SimpleFixture
@@ -20,5 +21,6 @@ class SimpleFixture extends AbstractSimpleFixture
     public function __construct()
     {
         $this->setResourceFixtureDir(__DIR__ . '/../dataFixture/simpleFixtureTest');
+        $this->setEntityClassName(Book::class);
     }
 }

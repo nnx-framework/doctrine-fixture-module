@@ -1,47 +1,31 @@
 <items>
     <item>
-        <field1>test_value_11</field1>
-        <field2>test_value_21</field2>
-    </item>
-    <item>
-        <field1>test_value_31</field1>
-        <field2>
+        <isbn>978-5-7502-0064-1</isbn>
+        <dateOfPublication>2005-08-15T15:52:01+00:00</dateOfPublication>
+        <title>Совершенный код. Мастер-класс</title>
+        <authors>
             <item>
-                <f1>val</f1>
+                <name>Стив</name>
+                <familyName>Макконнелл</familyName>
+                <address>
+                    <item>
+                        <city>DefaultCity</city>
+                        <street>DefaultStreet</street>
+                    </item>
+                </address>
             </item>
             <item>
-                <f1>val</f1>
-                <f2>val</f2>
+                <name>Автор</name>
+                <familyName>Тестовый</familyName>
+                <address>
+                    <item>
+                        <city>DefaultCity</city>
+                        <street>DefaultStreet</street>
+                    </item>
+                </address>
             </item>
-        </field2>
-        <field3>
-            <id>val</id>
-        </field3>
-    </item>
-    <item>
-        <field1>test_value_31</field1>
-        <field2>
-            <item>
-                <f1>val</f1>
-                <f2>val</f2>
-            </item>
-            <item>
-                <f1>val</f1>
-                <f2>val</f2>
-            </item>
-            <item>
-                <f1>val</f1>
-                <f2>val</f2>
-            </item>
-
-        </field2>
-        <field3>
-            <id>val</id>
-        </field3>
-    </item>
-    <item>
-        <field1>test_value_71</field1>
-        <field2>test_value_81</field2>
+        </authors>
     </item>
 </items>
+
 

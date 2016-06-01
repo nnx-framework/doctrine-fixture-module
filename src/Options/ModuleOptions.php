@@ -60,6 +60,13 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
     protected $resourceLoader = [];
 
     /**
+     * Имя сервиса, по которому можно получить локатор, для создания сущностей. Используется в SimpleFixture
+     *
+     * @var string
+     */
+    protected $simpleFixtureEntityLocator;
+
+    /**
      * Возвращает конфиг фикстур
      *
      * @return array
@@ -201,6 +208,30 @@ class ModuleOptions extends AbstractOptions implements ModuleOptionsInterface
     public function setResourceLoader(array $resourceLoader = [])
     {
         $this->resourceLoader = $resourceLoader;
+
+        return $this;
+    }
+
+    /**
+     * Возвращает имя сервиса, по которому можно получить локатор, для создания сущностей. Используется в SimpleFixture
+     *
+     * @return string
+     */
+    public function getSimpleFixtureEntityLocator()
+    {
+        return $this->simpleFixtureEntityLocator;
+    }
+
+    /**
+     * Устанавливает имя сервиса, по которому можно получить локатор, для создания сущностей. Используется в SimpleFixture
+     *
+     * @param string $simpleFixtureEntityLocator
+     *
+     * @return $this
+     */
+    public function setSimpleFixtureEntityLocator($simpleFixtureEntityLocator)
+    {
+        $this->simpleFixtureEntityLocator = $simpleFixtureEntityLocator;
 
         return $this;
     }

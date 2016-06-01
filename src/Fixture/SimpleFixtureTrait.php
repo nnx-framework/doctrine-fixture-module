@@ -5,7 +5,9 @@
  */
 namespace Nnx\DoctrineFixtureModule\Fixture;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Nnx\DoctrineFixtureModule\FixtureDataReader\FixtureDataReaderManagerInterface;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureServiceInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Doctrine\Fixture\Executor;
@@ -45,6 +47,33 @@ trait SimpleFixtureTrait
      * @var string
      */
     protected $fixtureDataReaderName = SimpleXmlFormatFixtureDataReader::class;
+
+    /**
+     * Класс сущности, для которой загружаются данные
+     *
+     * @var string
+     */
+    protected $entityClassName;
+
+
+    /**
+     * @return SimpleFixtureServiceInterface
+     */
+    abstract public function getSimpleFixtureService();
+
+    /**
+     * Возвращает ManagerRegistry
+     *
+     * @return ManagerRegistry
+     */
+    abstract public function getManagerRegistry();
+
+    /**
+     * Возвращает менеджер для работы с данными для фикстуры
+     *
+     * @return FixtureDataReaderManagerInterface
+     */
+    abstract public function getFixtureDataReaderManager();
 
     /**
      * Возвращает имя компонента, отвечающего за загрузку данных для фикстуры
@@ -144,19 +173,6 @@ trait SimpleFixtureTrait
         return $this->resourceFixtureDir;
     }
 
-    /**
-     * Возвращает имя используемого ObjectManager'a
-     *
-     * @return string
-     */
-    abstract public function getObjectManagerName();
-
-    /**
-     * Возвращает менеджер для работы с данными для фикстуры
-     *
-     * @return FixtureDataReaderManagerInterface
-     */
-    abstract public function getFixtureDataReaderManager();
 
     /**
      * Устанавливает директорию в которой находятся ресурсы для фикстуры
@@ -213,20 +229,31 @@ trait SimpleFixtureTrait
         $filesIterator = $this->getResourceFilesFinder();
         $this->configureResourceFilesFinder($filesIterator);
 
+
+        $simpleFixtureService = $this->getSimpleFixtureService();
+
+        $objectManagerName = $this->getObjectManagerName();
+        $managerRegistry = $this->getManagerRegistry();
+        $objectManager = $managerRegistry->getManager($objectManagerName);
+        $entityClassName = $this->getEntityClassName();
         /** @var  $fixtureDataReaderName */
         $fixtureDataReaderName = $this->getFixtureDataReaderName();
-        $fixtureDataReader = $this->getFixtureDataReaderManager()->get($fixtureDataReaderName);
+
+
+        $fixtureDataReaderManager = $this->getFixtureDataReaderManager();
+        $fixtureDataReader = $fixtureDataReaderManager->get($fixtureDataReaderName);
+
         foreach ($filesIterator as $file) {
             /** @var SplFileInfo $file */
-            $dataContainer = $fixtureDataReader->loadDataFromResource($file->getRealPath());
+            $path = $file->getRealPath();
 
+            $dataContainer = $fixtureDataReader->loadDataFromResource($path);
 
-            return;
-//            if (Executor::IMPORT === $method) {
-//
-//            } elseif (Executor::PURGE === $method) {
-//
-//            }
+            if (Executor::IMPORT === $method) {
+                $simpleFixtureService->import($dataContainer, $entityClassName, $objectManager);
+            } elseif (Executor::PURGE === $method) {
+                $simpleFixtureService->purge($dataContainer, $entityClassName, $objectManager);
+            }
         }
     }
 
@@ -238,5 +265,29 @@ trait SimpleFixtureTrait
     public function purge()
     {
         $this->executeFixture(Executor::PURGE);
+    }
+
+    /**
+     * Возвращает класс сущности, для которой загружаются данные
+     *
+     * @return string
+     */
+    public function getEntityClassName()
+    {
+        return $this->entityClassName;
+    }
+
+    /**
+     * Устанавливает класс сущности, для которой загружаются данные
+     *
+     * @param string $entityClassName
+     *
+     * @return $this
+     */
+    public function setEntityClassName($entityClassName)
+    {
+        $this->entityClassName = $entityClassName;
+
+        return $this;
     }
 }

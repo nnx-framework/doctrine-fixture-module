@@ -196,12 +196,12 @@ class ParserContext
         $parentEntity = $this->getParentEntity();
 
         if (null !== $parentAssociation && null === $parentEntity) {
-            $errMsg = 'Parent association not specified';
+            $errMsg = 'Parent entity not specified';
             throw new Exception\InvalidParserContextException($errMsg);
         }
 
         if (null === $parentAssociation && null !== $parentEntity) {
-            $errMsg = 'Parent entity not specified';
+            $errMsg = 'Parent association not specified';
             throw new Exception\InvalidParserContextException($errMsg);
         }
 

@@ -6,6 +6,7 @@
 namespace Nnx\DoctrineFixtureModule\FixtureDataReader;
 
 use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Entity;
+use Nnx\DoctrineFixtureModule\FixtureDataReader\DataContainer\Index;
 
 /**
  * Interface DataContainerInterface
@@ -30,4 +31,12 @@ interface DataContainerInterface
      * @return $this
      */
     public function addEntity(Entity $entity);
+
+
+    /**
+     * Возвращает хранилище индексов
+     *
+     * @return Index
+     */
+    public function getIndex();
 }

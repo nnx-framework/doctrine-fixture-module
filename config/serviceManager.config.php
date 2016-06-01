@@ -29,6 +29,13 @@ use Nnx\DoctrineFixtureModule\FixtureInitializer\FixtureInitializerManager;
 use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderManager;
 use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderServiceInterface;
 use Nnx\DoctrineFixtureModule\ResourceLoader\ResourceLoaderServiceFactory;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureServiceInterface;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureServiceFactory;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureMetadataBuilderInterface;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureMetadataBuilderFactory;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureImportEngineInterface;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\SimpleFixtureImportEngineFactory;
+use Nnx\DoctrineFixtureModule\Fixture\SimpleFixture\EntityLocator;
 
 return [
     'service_manager' => [
@@ -39,14 +46,18 @@ return [
             ManagerRegistryProviderInterface::class   => ManagerRegistryProvider::class,
             FixtureInitializerManagerInterface::class => FixtureInitializerManager::class,
             ResourceLoaderManagerInterface::class     => ResourceLoaderManager::class,
-            FixtureDataReaderManagerInterface::class  => FixtureDataReaderManager::class
+            FixtureDataReaderManagerInterface::class  => FixtureDataReaderManager::class,
+            EntityLocator::class                      => EntityLocator::class
         ],
         'factories'          => [
-            DefaultExecutorConfiguration::class      => DefaultExecutorConfigurationFactory::class,
-            FixtureExecutorBuilderInterface::class   => FixtureExecutorBuilderFactory::class,
-            FilterUsedFixtureListener::class         => FilterUsedFixtureListenerFactory::class,
-            FilterUsedFixtureServiceInterface::class => FilterUsedFixtureServiceFactory::class,
-            ResourceLoaderServiceInterface::class    => ResourceLoaderServiceFactory::class
+            DefaultExecutorConfiguration::class          => DefaultExecutorConfigurationFactory::class,
+            FixtureExecutorBuilderInterface::class       => FixtureExecutorBuilderFactory::class,
+            FilterUsedFixtureListener::class             => FilterUsedFixtureListenerFactory::class,
+            FilterUsedFixtureServiceInterface::class     => FilterUsedFixtureServiceFactory::class,
+            ResourceLoaderServiceInterface::class        => ResourceLoaderServiceFactory::class,
+            SimpleFixtureServiceInterface::class         => SimpleFixtureServiceFactory::class,
+            SimpleFixtureMetadataBuilderInterface::class => SimpleFixtureMetadataBuilderFactory::class,
+            SimpleFixtureImportEngineInterface::class    => SimpleFixtureImportEngineFactory::class
         ],
         'abstract_factories' => [
 

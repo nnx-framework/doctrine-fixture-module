@@ -53,4 +53,16 @@ class TestPaths
     {
         return __DIR__ . '/../../../data/test/Proxies/';
     }
+
+
+    /**
+     * Путь до директории, в которой находятся xml файлы для тестирования компонента отвечающего за чтение данных
+     * для фикстуры
+     *
+     * @return string
+     */
+    public static function getPathToSimpleXmlFormatDataReaderDataDir()
+    {
+        return __DIR__ . '/../_files/SimpleXmlFormatDataReaderData';
+    }
 }
